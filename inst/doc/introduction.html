@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction</h1>
+
+
+
+<div id="the-motivation-behind-ino" class="section level2">
+<h2>The motivation behind {ino}</h2>
+<p>Whenever we numerically optimize a function, the optimization
+algorithm and chosen starting values can have a substantial effect on
+the computational cost or even on the results. The purpose of the {ino}
+R package is to provide a comprehensive toolbox for comparing different
+initialization strategies when performing numerical optimization.</p>
+<p>In the following, we demonstrate the main functionality of {ino}. In
+particular, we show how to numerically optimize a likelihood function,
+thereby applying different strategies for the choice of the starting
+values and the optimization strategy, and eventually comparing the
+optimization outcomes.</p>
+</div>
+<div id="example-fitting-a-gaussian-mixture" class="section level2">
+<h2>Example: Fitting a Gaussian mixture</h2>
+<p>We consider the popular <code>faithful</code> data set that is
+provided via base R.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> The following histogram of eruption times
+indicate two clusters with short and long eruption times,
+respectively:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;faithful&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(faithful, <span class="fu">aes</span>(<span class="at">x =</span> eruptions, <span class="at">y =</span> ..density..)) <span class="sc">+</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Eruption time (min)&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;density&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" width="75%" style="display: block; margin: auto;" /></p>
+<p>For both clusters, we assume a normal distribution here, such that we
+consider a mixture of two Gaussian densities for modeling the overall
+eruption times. The log-likelihood is given by</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\theta}) = \sum_{i=1}^n \log\Big( \pi f_{\mu_1,
+\sigma_1^2}(x_i) + (1-\pi)f_{\mu_2,\sigma_2^2} (x_i) \Big),
+\]</span> where <span class="math inline">\(f_{\mu_1,
+\sigma_1^2}\)</span> and <span class="math inline">\(f_{\mu_2,
+\sigma_2^2}\)</span> denote the normal density for the first and second
+cluster, respectively, and <span class="math inline">\(\pi\)</span> is
+the mixing proportion. The vector of parameters to be estimated is thus
+<span class="math inline">\(\boldsymbol{\theta} = (\mu_1, \mu_2,
+\sigma_1, \sigma_2, \pi)\)</span>. As there exists no closed-form
+solution for the maximum likelihood estimator, we need numerical
+optimization for finding the function optimum, where the {ino} package
+will help us in applying different initialization strategies.</p>
+<p>The following function implements the log-likelihood of the normal
+mixture. Note that we restrict the standard deviations
+<code>sigma</code> to be positive and <code>pi</code> to be between 0
+and 1, and that the function returns the negative log-likelihood
+value.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>normal_mixture_llk <span class="ot">&lt;-</span> <span class="cf">function</span>(theta, data, column){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  pi <span class="ot">&lt;-</span> <span class="fu">plogis</span>(theta[<span class="dv">5</span>])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  logl <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">log</span>(pi <span class="sc">*</span> <span class="fu">dnorm</span>(data[[column]], mu[<span class="dv">1</span>], sigma[<span class="dv">1</span>]) <span class="sc">+</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                    (<span class="dv">1</span> <span class="sc">-</span> pi) <span class="sc">*</span> <span class="fu">dnorm</span>(data[[column]], mu[<span class="dv">2</span>], sigma[<span class="dv">2</span>])))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="sc">-</span>logl)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We setup an <code>ino</code> object using the function
+<code>setup_ino</code>. Here, <code>f</code> constitutes the function to
+be optimized (i.e. <code>normal_mixture_llk</code>), <code>npar</code>
+gives the number of parameters, <code>data</code> gives the vector of
+observations as required by our likelihood function, and
+<code>opt</code> sets the optimizer. Behind the scenes,
+<code>setup_ino</code> runs several checks of the inputs, such as
+checking whether a function and a optimizer have been provided, whether
+the function <code>f</code> can be called, etc.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>geyser_ino <span class="ot">&lt;-</span> <span class="fu">setup_ino</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">f =</span> normal_mixture_llk,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">npar =</span> <span class="dv">5</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> faithful,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">column =</span> <span class="st">&quot;eruptions&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">opt =</span> <span class="fu">set_optimizer_nlm</span>()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div id="fixed-starting-values" class="section level3">
+<h3>Fixed starting values</h3>
+<p>With the <code>ino</code> object <code>geyser_ino</code>, we can now
+optimize the likelihood function. We will first consider fixed starting
+values, i.e. we make “educated guesses” about starting values that are
+probably close to the optimum. Based on the histogram above, the means
+of the two normal distributions may be somewhere around 2 and 4. For the
+variances, we set the starting values to 1 (note that we use the log
+transformation here since we restrict the standard deviations to be
+positive by using <code>exp()</code> in the log-likelihood function). We
+will use two sets of starting values where the means are lower and
+larger than 2 and 4, respectively. For both sets, the starting value for
+the mixing proportion is 0.5. To compare the results of different
+optimization runs, we also select a set of starting values which are
+somewhat unplausible.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>starting_values <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">4.3</span>, <span class="fu">log</span>(<span class="dv">1</span>), <span class="fu">log</span>(<span class="dv">1</span>), <span class="fu">qlogis</span>(<span class="fl">0.5</span>)),</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">c</span>(<span class="fl">2.3</span>, <span class="fl">3.7</span>, <span class="fu">log</span>(<span class="dv">1</span>), <span class="fu">log</span>(<span class="dv">1</span>), <span class="fu">qlogis</span>(<span class="fl">0.5</span>)),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">8</span>, <span class="fu">log</span>(<span class="fl">0.1</span>), <span class="fu">log</span>(<span class="fl">0.2</span>), <span class="fu">qlogis</span>(<span class="fl">0.5</span>)))</span></code></pre></div>
+<p>The function provided by {ino} to run the optimization with chosen
+starting values is <code>fixed_initialization()</code>. We then loop
+over the set of starting values by passing them to the argument
+<code>at</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(val <span class="cf">in</span> starting_values)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  geyser_ino <span class="ot">&lt;-</span> <span class="fu">fixed_initialization</span>(geyser_ino, <span class="at">at =</span> val)</span></code></pre></div>
+<p>Let’s look at the results:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(geyser_ino)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .strategy            .time .optimum code iterations</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     fixed 0.010668039 secs  276.360    1         17</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     fixed 0.009079933 secs  276.360    1         16</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     fixed 0.014434099 secs  421.417    1         32</span></span></code></pre></div>
+<p>The last run (with the unplausible starting values) converged to a
+local optimum. We discard this run from further comparisons:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>geyser_ino <span class="ot">&lt;-</span> <span class="fu">clear_ino</span>(geyser_ino, <span class="at">which =</span> <span class="dv">3</span>)</span></code></pre></div>
+</div>
+<div id="randomly-chosen-starting-values" class="section level3">
+<h3>Randomly chosen starting values</h3>
+<p>When using randomly chosen starting values, we apply the function
+<code>random_initialization()</code>. The most simple (yet
+<strong>not</strong> necessarily effective) function call would be as
+follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>geyser_ino <span class="ot">&lt;-</span> <span class="fu">random_initialization</span>(geyser_ino)</span></code></pre></div>
+<p>Here, <code>npar</code> starting values are randomly drawn from a
+standard normal distribution. Depending on the application and the
+magnitude of the parameters to be estimated, this may not be a good
+guess. We can, however, easily modify the distribution that is used to
+draw the random numbers. For example, the next code snippet uses
+starting values drawn from a <span class="math inline">\(\mathcal{N}(2,
+0.5)\)</span> distribution:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>geyser_ino <span class="ot">&lt;-</span> <span class="fu">random_initialization</span>(geyser_ino, <span class="at">sampler =</span> stats<span class="sc">::</span>rnorm, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p>The argument <code>sampler</code> allows to use any random number
+generator, while further arguments for the sampler can easily be added.
+As it was done above for fixed starting values, we could of course also
+use a loop here to run multiple optimization.</p>
+</div>
+</div>
+<div id="evaluating-the-optimization-runs" class="section level2">
+<h2>Evaluating the optimization runs</h2>
+<p>The <code>geyser_ino</code> object now contains the results and
+further information on four optimization runs (two runs with fixed and
+two with randomly selected starting values). We can use
+<code>summary()</code> to obtain summary statistics for the optimization
+runs conducted. Moreover, we also can add grouping variables, for
+example to compare the average computation time for the two
+approaches:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(geyser_ino, <span class="at">group =</span> <span class="st">&quot;.strategy&quot;</span>, <span class="st">&quot;average_time&quot;</span> <span class="ot">=</span> <span class="fu">mean</span>(.time))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .strategy runs     average_time</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     fixed    2 0.009873986 secs</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    random    2 0.017392993 secs</span></span></code></pre></div>
+<p>In addition, <code>summary()</code> by default prints the number of
+optimization runs for each group.</p>
+<p>Due to the relatively simple statistical model considered in this
+example, the average computation time in our examples is fairly low.
+However, when considering more complex models, the computation time can
+substantially differ across different optimization strategies.</p>
+<p>If we do not set any group, <code>summary()</code> prints the entire
+table displaying all optimization runs.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(geyser_ino)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .strategy            .time .optimum code iterations</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     fixed 0.010668039 secs   276.36    1         17</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     fixed 0.009079933 secs   276.36    1         16</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    random 0.018209934 secs   276.36    2         39</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    random 0.016576052 secs   276.36    1         31</span></span></code></pre></div>
+<p>Here, the runs with fixed chosen starting values require much less
+iterations until convergence than the optimization with randomly chosen
+starting values. The final (negative) log-likelihood value (column
+<code>.optimum</code>) further indicates that the convergence to local
+optimum for the random initialized runs.</p>
+</div>
+<div id="more-involved-initialization-strategies" class="section level2">
+<h2>More involved initialization strategies</h2>
+<div id="standardized-initialization" class="section level3">
+<h3>Standardized initialization</h3>
+<p>For standardized initialization, we standardize all columns in our
+data before running the optimization. Specifically, after standardizing
+the data, we can again select to use either fixed or randomly chosen
+starting values. In the example code snippet shown below, we consider
+five sets of randomly selected starting values:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  geyser_ino <span class="ot">&lt;-</span> <span class="fu">standardize_initialization</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    geyser_ino, <span class="at">initialization =</span> <span class="fu">random_initialization</span>())</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(geyser_ino, <span class="at">group =</span> <span class="st">&quot;.strategy&quot;</span>, <span class="st">&quot;average_time&quot;</span> <span class="ot">=</span> <span class="fu">mean</span>(.time))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            .strategy runs     average_time</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1              fixed    2 0.009873986 secs</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2             random    2 0.017392993 secs</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 standardize&gt;random    5 0.014784002 secs</span></span></code></pre></div>
+</div>
+<div id="subset-initialization" class="section level3">
+<h3>Subset initialization</h3>
+<p>If the data set considered shows some complex structures or is very
+large, numerical optimization may become computationally costly. In such
+cases, <em>subset initialization</em> can be a helpful tool.</p>
+<p>The function <code>subset_initialization</code> uses a subsample from
+the data via the argument <code>prop</code> to optimize the likelihood.
+We can then fit our model to the subset using either fixed or random
+starting values. For example, the following code snippet randomly
+samples 50% of the observations and uses random initialization:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  geyser_ino <span class="ot">&lt;-</span> <span class="fu">subset_initialization</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>       geyser_ino, <span class="at">prop =</span> <span class="fl">0.5</span>, <span class="at">initialization =</span> <span class="fu">random_initialization</span>())</span></code></pre></div>
+<p>After having optimized the likelihood on the subsample,
+<code>subset_initialization()</code> automatically fits the model to the
+entire data set using the resulting parameter estimates of the subset as
+starting values. The resulting optimization run is labelled as
+<code>subset&gt;random</code> in the <code>summary()</code> table:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(geyser_ino, <span class="at">group =</span> <span class="st">&quot;.strategy&quot;</span>, <span class="st">&quot;average_time&quot;</span> <span class="ot">=</span> <span class="fu">mean</span>(.time))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            .strategy runs     average_time</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1              fixed    2 0.009873986 secs</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2             random    2 0.017392993 secs</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 standardize&gt;random    5 0.014784002 secs</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      subset&gt;random    5 0.015493393 secs</span></span></code></pre></div>
+<p>In addition to selecting subsamples at random, we can specify two
+further options using the argument <code>how</code>. When dealing with
+time series data, we usually do not want to delete single observations
+at random. Instead, we can select a proportion of the first rows by
+specifying <code>how = &quot;first&quot;</code>. We could also cluster our data
+first using <code>how = &quot;kmeans&quot;</code>. For all subset optimization
+strategies, <code>subset_initialization()</code> first fits the model to
+the chosen subset and stores the resulting estimates. These estimates
+are then used as initial values in the second step where the model is
+fitted to the entire data.</p>
+<p>In some of the examples above, we combined two optimization
+strategies. For example, we have chosen random starting values for a
+subset. The flexibility of {ino} also allows more than two combinations.
+We could, for example, select a subset, standardize the data, and then
+use random starting values.</p>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>The data set contains information about the eruption
+times of the Old Faithful geyser in Yellowstone National Park, Wyoming,
+USA: the eruption time and the waiting time to the next eruption (both
+given in minutes).<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

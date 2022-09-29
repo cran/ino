@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Example: Probit Model</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Example: Probit Model</h1>
+
+
+
+<p>The probit model is a flexible and widely-used tool for the analysis
+of such discrete choice behavior. Choosing between alternatives is
+omnipresent in everyday life, from the choice of a vehicle for traveling
+to work over different brands in a supermarket to companies deciding
+among production plans. Many scientific areas apply the probit model for
+studying the driving factors behind decision makers’ choices, for
+example transportation <span class="citation">(<a href="#ref-Bolduc:1999" role="doc-biblioref">Bolduc 1999</a>; <a href="#ref-Shin:2015" role="doc-biblioref">Shin et al. 2015</a>)</span>
+and marketing <span class="citation">(<a href="#ref-Allenby:1998" role="doc-biblioref">Allenby and Rossi 1998</a>; <a href="#ref-Haaijer:1998" role="doc-biblioref">Haaijer et al. 1998</a>;
+<a href="#ref-Paap:2000" role="doc-biblioref">Paap and Franses
+2000</a>)</span>. Estimating the probit model’s parameters traditionally
+is performed via maximizing the likelihood function numerically. With
+rising model complexity however, this approach becomes both
+computationally expensive and does not guarantee convergence to the
+global optimum.</p>
+<div id="the-model-formulation" class="section level2">
+<h2>The model formulation</h2>
+<p>We briefly formulate the probit model and its estimation and refer to
+<span class="citation">Train (<a href="#ref-Train:2009" role="doc-biblioref">2009</a>)</span> and <span class="citation">Bhat
+(<a href="#ref-Bhat:2011" role="doc-biblioref">2011</a>)</span> for
+further details. Say that <span class="math inline">\(N\)</span>
+deciders choose among <span class="math inline">\(J \geq 2\)</span>
+alternatives at each of <span class="math inline">\(T\)</span> choice
+occasions. The values for <span class="math inline">\(J\)</span> and
+<span class="math inline">\(T\)</span> can be decider-specific, though
+we do not show this dependence in our notation. Let <span class="math inline">\(y_{nt} \in \{1,\dots,J\}\)</span> label the choice
+of decider <span class="math inline">\(n\)</span> at occasion <span class="math inline">\(t\)</span>. Assume that the choice was rational in
+the sense that <span class="math inline">\(y_{nt}\)</span> yields the
+highest utility <span class="math inline">\(U_{nt}\)</span> for <span class="math inline">\(n\)</span> at <span class="math inline">\(t\)</span>. The probit model defines <span class="math display">\[U_{nt} = X_{nt} \beta + \epsilon_{nt}\]</span>,
+where <span class="math inline">\(X_{nt}\)</span> is a <span class="math inline">\(J\times P\)</span>-matrix of <span class="math inline">\(P\)</span> characteristics for each alternative,
+<span class="math inline">\(\beta\)</span> is a coefficient vector of
+length <span class="math inline">\(P\)</span> and <span class="math inline">\(\epsilon_{nt} \sim N(0,\Sigma)\)</span> denotes
+the vector of jointly normal distributed unobserved influences. We
+ensure identifiability by taking utility differences and fixing one
+error-term variance. This implies that instead of <span class="math inline">\(\Sigma\)</span>, we estimate <span class="math inline">\(J(J-1)/2-1\)</span> parameters of a transformed
+covariance matrix.</p>
+<p>The researcher aims to estimate the values for <span class="math inline">\(b\)</span> and <span class="math inline">\(\Sigma\)</span>, most commonly by the maximum
+likelihood method. Let <span class="math inline">\(\theta\)</span>
+denote the vector of the <span class="math inline">\(P\)</span>
+coefficients of <span class="math inline">\(b\)</span> and <span class="math inline">\(J(J-1)/2-1\)</span> identified parameters of <span class="math inline">\(\Sigma\)</span>. Note that the length of <span class="math inline">\(\theta\)</span> rises quadratically with <span class="math inline">\(J\)</span>. The maximum likelihood estimate <span class="math inline">\(\hat{\theta}\)</span> is obtained by solving <span class="math display">\[\begin{equation}
+    \label{eq:ll}
+    \arg \max_\theta \log \sum_{n,t,j} 1(y_{nt} = j) \int 1(j = \arg
+\max U_{nt}) \phi(\epsilon_{nt}) d \epsilon_{nt},
+\end{equation}\]</span> where <span class="math inline">\(1(\cdot)\)</span> denotes the indicator function
+and <span class="math inline">\(\phi(\cdot)\)</span> the normal density.
+The integral part of does not have a closed-form expression and hence
+must be approximated numerically.</p>
+</div>
+<div id="simulate-data-from-a-probit-model" class="section level2">
+<h2>Simulate data from a probit model</h2>
+<p>The {ino} package provides the function <code>sim_mnp()</code> to
+simulate data from a probit model. We simulate 10 data sets.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>J <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="fl">0.5</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(J)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  class <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  mean <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(class, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(stats<span class="sc">::</span><span class="fu">rnorm</span>(J<span class="sc">*</span>P, <span class="at">mean =</span> mean), <span class="at">nrow =</span> J, <span class="at">ncol =</span> P)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>probit_data <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">10</span>, <span class="fu">sim_mnp</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> N, <span class="at">T =</span> T, <span class="at">J =</span> J, <span class="at">P =</span> P, <span class="at">b =</span> b, <span class="at">Sigma =</span> Sigma, <span class="at">X =</span> X</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>), <span class="at">simplify =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>The following lines specify the <code>ino</code> object. The
+likelihood is computed via <code>f_ll_mnp()</code> which is provided via
+{ino}. Via the <code>global</code> argument, we can specify the true
+parameter vector thats leads to the global optimum. The
+<code>mpvs = &quot;data&quot;</code> input specifies that we want to loop over the
+ten provided data sets.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>true <span class="ot">&lt;-</span> <span class="fu">attr</span>(probit_data[[<span class="dv">1</span>]], <span class="st">&quot;true&quot;</span>)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>probit_ino <span class="ot">&lt;-</span> <span class="fu">setup_ino</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">f =</span> f_ll_mnp,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">npar =</span> <span class="dv">5</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">global =</span> true,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> probit_data,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">neg =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">mpvs =</span> <span class="st">&quot;data&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">opt =</span> <span class="fu">set_optimizer_nlm</span>(<span class="at">iterlim =</span> <span class="dv">1000</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="random-initialization" class="section level2">
+<h2>Random initialization</h2>
+<p>We initialize <code>runs = 100</code> times randomly.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>probit_ino <span class="ot">&lt;-</span> <span class="fu">random_initialization</span>(probit_ino, <span class="at">runs =</span> <span class="dv">100</span>)</span></code></pre></div>
+</div>
+<div id="initializing-using-a-subsample" class="section level2">
+<h2>Initializing using a subsample</h2>
+<p>We initialize on a subset of proportion 20% and 50%, which was
+selected randomly and using kmeans, respectively.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(how <span class="cf">in</span> <span class="fu">c</span>(<span class="st">&quot;random&quot;</span>, <span class="st">&quot;kmeans&quot;</span>)) <span class="cf">for</span>(prop <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.5</span>)) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  probit_ino <span class="ot">&lt;-</span> <span class="fu">subset_initialization</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    probit_ino, <span class="at">arg =</span> <span class="st">&quot;data&quot;</span>, <span class="at">how =</span> how, <span class="at">prop =</span> prop,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ind_ign =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">initialization =</span> <span class="fu">random_initialization</span>(<span class="at">runs =</span> <span class="dv">100</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="remove-runs-that-did-not-converge" class="section level2">
+<h2>Remove runs that did not converge</h2>
+<p>3 optimization runs reached the iteration limit of 1000
+iterations:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;dplyr&quot;</span>, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(probit_ino, <span class="st">&quot;iterations&quot;</span> <span class="ot">=</span> <span class="st">&quot;iterations&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(iterations <span class="sc">&gt;=</span> <span class="dv">1000</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 5</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .strategy          .time         .optimum .optimizer iterations</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;              &lt;drtn&gt;           &lt;dbl&gt; &lt;chr&gt;           &lt;int&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 random             5290.284 secs     507. stats::nlm       1000</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 subset(kmeans,0.2) 9330.853 secs    1151. stats::nlm       1000</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 subset(kmeans,0.2) 9328.964 secs     975. stats::nlm       1000</span></span></code></pre></div>
+<p>We exclude them from further analysis:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ind <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">summary</span>(probit_ino, <span class="st">&quot;iterations&quot;</span> <span class="ot">=</span> <span class="st">&quot;iterations&quot;</span>)<span class="sc">$</span>iterations <span class="sc">&gt;=</span> <span class="dv">1000</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>probit_ino <span class="ot">&lt;-</span> <span class="fu">clear_ino</span>(probit_ino, <span class="at">which =</span> ind) </span></code></pre></div>
+</div>
+<div id="comparison" class="section level2">
+<h2>Comparison</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(probit_ino, <span class="at">by =</span> <span class="st">&quot;.strategy&quot;</span>, <span class="at">time_unit =</span> <span class="st">&quot;mins&quot;</span>, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" width="100%" style="display: block; margin: auto;" /></p>
+<p>We see that the subset initialization strategies reduce the
+computation time significantly, in comparison to the random
+initialization on the full data set.</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Allenby:1998" class="csl-entry">
+Allenby, Greg M., and Peter E. Rossi. 1998. <span>“Marketing Models of
+Consumer Heterogeneity.”</span> <em>Journal of Econometrics</em> 89 (1):
+57–78.
+</div>
+<div id="ref-Bhat:2011" class="csl-entry">
+Bhat, Chandra. 2011. <span>“The Maximum Approximate Composite Marginal
+Likelihood (MACML) Estimation of Multinomial Probit-Based Unordered
+Response Choice Models.”</span> <em>Transportation Research Part B:
+Methodological</em> 45.
+</div>
+<div id="ref-Bolduc:1999" class="csl-entry">
+Bolduc, Denis. 1999. <span>“A Practical Technique to Estimate
+Multinomial Probit Models in Transportation.”</span> <em>Transportation
+Research Part B: Methodological</em> 33 (1): 63–79.
+</div>
+<div id="ref-Haaijer:1998" class="csl-entry">
+Haaijer, Rinus, Michel Wedel, Marco Vriens, and Tom Wansbeek. 1998.
+<span>“Utility Covariances and Context Effects in Conjoint MNP
+Models.”</span> <em>Marketing Science</em> 17 (3): 236–52.
+</div>
+<div id="ref-Paap:2000" class="csl-entry">
+Paap, Richard, and Philip Hans Franses. 2000. <span>“A Dynamic
+Multinomial Probit Model for Brand Choice with Different Long-Run and
+Short-Run Effects of Marketing-Mix Variables.”</span> <em>Journal of
+Applied Econometrics</em> 15 (6): 717–44.
+</div>
+<div id="ref-Shin:2015" class="csl-entry">
+Shin, Jungwoo, Chandra R. Bhat, Daehyun You, Venu M. Garikapati, and Ram
+M. Pendyala. 2015. <span>“Consumer Preferences and Willingness to Pay
+for Advanced Vehicle Technology Options and Fuel Types.”</span>
+<em>Transportation Research Part C: Emerging Technologies</em> 60.
+</div>
+<div id="ref-Train:2009" class="csl-entry">
+Train, Kenneth. 2009. <em>Discrete Choice Methods with Simulation</em>.
+2. ed. Cambridge Univ. Press.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

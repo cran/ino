@@ -6,37 +6,49 @@
 \usage{
 sim_mnp(
   N,
-  T = 1,
+  Tp = 1,
   J,
   P,
   b = stats::rnorm(P),
   Omega = NULL,
   Sigma = diag(J),
-  X = function() matrix(stats::rnorm(J * P), nrow = J, ncol = P)
+  X = function(n, t) matrix(stats::rnorm(J * P), nrow = J, ncol = P),
+  seed = NULL
 )
 }
 \arguments{
-\item{N}{The number of observations.}
+\item{N}{An \code{integer}, the number of observations.}
 
-\item{T}{The number of choice occasions with \code{T = 1} per default.}
+\item{Tp}{An \code{integer}, the number of choice occasions.
+By default, \code{Tp = 1}.}
 
-\item{J}{The number of alternatives.}
+\item{J}{An \code{integer}, the number of alternatives.
+Must be greater of equal \code{2}.}
 
-\item{P}{The number of choice covariates.}
+\item{P}{An \code{integer}, the number of choice covariates.}
 
-\item{b}{The mean effects vector of length \code{P}, first element must be \code{1}.}
+\item{b}{A \code{numeric} vector, the mean effects vector of length \code{P}.
+The first element must be \code{1} (for normalization).}
 
-\item{Omega}{The covariance matrix of the normal mixing distribution of dimension \code{P}
-times \code{P}. Set to \code{NULL} (the default) for no mixing distribution.}
+\item{Omega}{A \code{matrix}, the covariance matrix of the normal mixing distribution of
+dimension \code{P} times \code{P}.
+Set to \code{NULL} (the default) for no mixing distribution.}
 
-\item{Sigma}{The error term covariance matrix of dimension \code{J} times \code{J}.}
+\item{Sigma}{A \code{matrix}, the error term covariance matrix of dimension \code{J}
+times \code{J}.}
 
-\item{X}{A function that samples the covariates. It must return a numeric matrix
-of dimension \code{J} times \code{P}.}
+\item{X}{A \code{function} that samples the covariates of decider \code{n} at choice
+occasion \code{t}. It must
+\itemize{
+\item have two arguments \code{n} and \code{t},
+\item return a \code{numeric} \code{matrix} of dimension \code{J} times \code{P}.
+}}
+
+\item{seed}{Optionally set a seed for the choice data simulation.}
 }
 \value{
-A \code{data.frame}. The first column (\code{N}) is the identifier for the
-decider, the next column (\code{T}) the identifier for the choice occasion.
+A \code{data.frame}. The first column (\code{n}) is the identifier for the
+decider, the next column (\code{t}) the identifier for the choice occasion.
 Next comes the column \code{y} with the indices of the chosen alternatives.
 The last columns contain the column-wise entries of the covariate matrices.
 
@@ -52,7 +64,7 @@ which is \code{TRUE} if \code{Omega} is not \code{NULL}).
 Simulate data from a (normally mixed) multinomial probit model
 }
 \examples{
-sim_mnp(N = 3, J = 2, P = 2, b = c(1,-1), Omega = diag(2), Sigma = diag(2))
+sim_mnp(N = 3, J = 3, P = 2, b = c(1, -1), Omega = diag(2), Sigma = diag(3))
 
 }
 \seealso{
@@ -60,4 +72,3 @@ sim_mnp(N = 3, J = 2, P = 2, b = c(1,-1), Omega = diag(2), Sigma = diag(2))
 multinomial probit model.
 }
 \keyword{function}
-\keyword{internal}

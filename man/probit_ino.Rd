@@ -3,9 +3,9 @@
 \docType{data}
 \name{probit_ino}
 \alias{probit_ino}
-\title{Example application of {ino} to probit likelihood}
+\title{Example application of to probit likelihood}
 \format{
-An object of class \code{ino}.
+A \code{\link{Nop}} object.
 }
 \usage{
 data(probit_ino)
@@ -14,4 +14,4 @@ data(probit_ino)
 See the vignette about the probit likelihood for details:
 \code{vignette("example_probit", package = "ino")}
 }
-\keyword{dataset}
+\keyword{demo}

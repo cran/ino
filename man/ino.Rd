@@ -4,7 +4,7 @@
 \name{ino}
 \alias{ino}
 \alias{ino-package}
-\title{ino: Initialization strategies for numerical optimization}
+\title{ino: Analysis of Initialization for Numerical Optimization}
 \description{
 This package implements tools for analyzing the initialization of
 numerical optimization.
@@ -23,6 +23,7 @@ Useful links:
 Authors:
 \itemize{
   \item Marius Ötting \email{marius.oetting@uni-bielefeld.de} (\href{https://orcid.org/0000-0002-9373-0365}{ORCID})
+  \item Dietmar Bauer \email{dietmar.bauer@uni-bielefeld.de} (\href{https://orcid.org/0000-0003-2920-7032}{ORCID})
 }
 
 }

@@ -1,43 +1,21 @@
-#' Earthquake data
+#' Example application to HMM likelihood
 #'
 #' @description
-#' This data set includes the number of yearly measured earthquakes from 1900
-#' to 2006.
-#'
-#' @docType data
-#'
-#' @usage data(earthquakes)
-#'
-#' @format
-#' The data set is a \code{data.frame} with two integer columns, \code{year} for
-#' the year and \code{obs} for the number of measured earthquakes.
-#'
-#' @source
-#' The data was obtained from
-#' \url{http://hmms-for-time-series.de/second/data/earthquakes.txt}
-#' on 2022-03-25.
-#'
-#' @keywords
-#' dataset
-"earthquakes"
-
-#' Example application of {ino} to fit an HMM
-#'
-#' @description
-#' The ino object that is obtained when running the code provided in the hidden Markov model vignette.
+#' See the vignette about the HMM likelihood for details:
+#' \code{vignette("example_hmm", package = "ino")}
 #'
 #' @docType data
 #'
 #' @usage data("hmm_ino")
 #'
 #' @format
-#' An object of class `ino`.
+#' A \code{\link{Nop}} object.
 #'
 #' @keywords
-#' dataset
+#' demo
 "hmm_ino"
 
-#' Example application of {ino} to probit likelihood
+#' Example application of to probit likelihood
 #'
 #' @description
 #' See the vignette about the probit likelihood for details:
@@ -48,8 +26,8 @@
 #' @usage data(probit_ino)
 #'
 #' @format
-#' An object of class \code{ino}.
+#' A \code{\link{Nop}} object.
 #'
 #' @keywords
-#' dataset
+#' demo
 "probit_ino"

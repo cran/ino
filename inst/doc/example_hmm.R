@@ -1,114 +1,116 @@
-## ---- include = FALSE---------------------------------------------------------
+## ---- setup, include = FALSE--------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.align = "center",
+  fig.path = "figures/hmm-",
   fig.dim = c(8, 6), 
-  out.width = "75%"
+  out.width = "75%",
+  # all optimizations are pre-computed to save building time
+  eval = FALSE
 )
 library("ino")
+data("hmm_ino")
 set.seed(1)
-hmm_ino <- ino::hmm_ino
+ggplot2::theme_set(ggplot2::theme_minimal())
 
-## ----message=FALSE,warning=FALSE----------------------------------------------
+## ---- download dax data, message = FALSE, warning = FALSE, eval = TRUE--------
 library("fHMM")
-file <- tempfile()
-fHMM::download_data(symbol = "DBK.DE", from = "2000-01-01", file = file)
-
-## ----message=FALSE,warning=FALSE----------------------------------------------
 library("dplyr")
-db_data <- read.csv(file) %>%
+dax <- download_data(symbol = "^GDAXI", from = "1990-01-01", to = "2020-01-01") %>%
   as_tibble() %>%
-  summarize(date = as.Date(Date, format = "%Y-%m-%d"),
-            obs = c(NA, diff(log(Close), lag=1) * 100)) %>%
-  filter(!is.na(obs)) %>%
+  reframe(
+    date = as.Date(Date, format = "%Y-%m-%d"),
+    logreturn = c(NA, diff(log(Close), lag = 1))
+  ) %>%
+  filter(!is.na(logreturn)) %>%
   print()
 
-## -----------------------------------------------------------------------------
+## ---- plot-dax-data, message = FALSE, warning = FALSE, eval = TRUE------------
 library("ggplot2")
-ggplot(db_data, aes(x = date, y = obs)) +
+ggplot(dax, aes(x = date, y = logreturn)) +
   geom_point() +
   geom_line() +
-  ylab("log-returns [%]")
+  scale_x_date() +
+  scale_y_continuous(labels = scales::label_percent())
 
-## ---- eval = FALSE------------------------------------------------------------
-#  hmm_ino <- setup_ino(
+## ---- define ino object-------------------------------------------------------
+#  hmm_ino <- Nop$new(
 #    f = f_ll_hmm,
 #    npar = 6,
-#    data = db_data,
+#    data = dax$logreturn,
 #    N = 2,
-#    neg = TRUE,
-#    opt = set_optimizer_nlm()
-#  )
+#    neg = TRUE
+#  )$
+#  set_optimizer(optimizer_nlm())
 
-## ---- eval = FALSE------------------------------------------------------------
-#  sampler <- function() c(log(stats::runif(2, 0.1, 0.9)),
-#                          stats::rnorm(2),
-#                          log(stats::runif(2, 0.5, 2)))
-#  hmm_ino <- random_initialization(hmm_ino, runs = 50, sampler = sampler)
+## ---- random initialization---------------------------------------------------
+#  sampler <- function() {
+#    c(stats::runif(2, -2, -1), stats::rnorm(2), log(stats::runif(2, 0.5, 2)))
+#  }
+#  hmm_ino$optimize(initial = sampler, runs = 100, label = "random")
 
-## ---- eval = FALSE------------------------------------------------------------
-#  starting_values <- list(c(-2, -2, 0, 0, log(2), log(3)),
-#                          c(-1.5, -1.5, -2, 2, log(1), log(2)),
-#                          c(-1, -1, -3, 3, log(2), log(2)))
-#  for(val in starting_values)
-#    hmm_ino <- fixed_initialization(hmm_ino, at = val)
+## ---- grid of educated guesses, eval = TRUE-----------------------------------
+tpm_entry_1 <- tpm_entry_2 <- c(-2, -2.5)
+mu_1 <- c(0, -0.05)
+mu_2 <- c(0, 0.05)
+sd_1 <- c(log(0.1), log(0.5))
+sd_2 <- c(log(0.75), log(1))
+starting_values <- asplit(expand.grid(
+  tpm_entry_1, tpm_entry_2, mu_1, mu_2, sd_1, sd_2), 
+  MARGIN = 1
+)
 
-## ---- eval = FALSE------------------------------------------------------------
-#  hmm_ino <- subset_initialization(
-#    hmm_ino, arg = "data", how = "first", prop = 0.5,
-#    initialization =  random_initialization(runs = 50, sampler = sampler)
-#  )
+## ---- optimization of educated guesses----------------------------------------
+#  hmm_ino$optimize(initial = starting_values, label = "educated_guess")
 
-## ---- eval = FALSE------------------------------------------------------------
-#  hmm_ino <- subset_initialization(
-#    hmm_ino, arg = "data", how = "first", prop = 0.05,
-#    initialization =  random_initialization(runs = 50, sampler = sampler)
-#  )
+## ---- subset initialization first---------------------------------------------
+#  hmm_ino$
+#    reduce("data", how = "first", prop = 0.25)$
+#    optimize(initial = sampler, runs = 100, label = "subset")$
+#    reset_argument("data")$
+#    continue()
 
-## -----------------------------------------------------------------------------
-overview_optima(hmm_ino)
+## ---- standardize initialization----------------------------------------------
+#  hmm_ino$
+#    standardize("data")$
+#    optimize(initial = sampler, runs = 100, label = "standardize")$
+#    reset_argument("data")
 
-## -----------------------------------------------------------------------------
-summary(hmm_ino)
+## ---- overview of optima, eval = TRUE-----------------------------------------
+hmm_ino$optima(sort_by = "value", only_comparable = TRUE, digits = 0)
 
-## -----------------------------------------------------------------------------
-which(summary(hmm_ino)$.optimum < 12878)
+## ---- get number of converged runs, include = FALSE, eval = TRUE--------------
+library("dplyr")
+optima <- hmm_ino$optima(sort_by = "value", only_comparable = TRUE, digits = 0)
+global <- optima %>% arrange(value) %>% slice(1) %>% pull(frequency)
+total <- sum(optima$frequency)
+local <- total - global
 
-## -----------------------------------------------------------------------------
-get_vars(hmm_ino, runs = which(summary(hmm_ino)$.optimum < 12878)[1])[[1]]$.init
+## ---- summary of results, eval = TRUE-----------------------------------------
+summary(hmm_ino, which_element = c("value", "parameter", "seconds")) %>% 
+  head(n = 10)
 
-## -----------------------------------------------------------------------------
-plot(hmm_ino, by = ".strategy", nrow = 1)
+## ---- best parameter, eval = TRUE---------------------------------------------
+hmm_ino$best_parameter()
 
-## ----warning=FALSE,message=FALSE----------------------------------------------
-summary(hmm_ino) %>% 
-  group_by(.strategy) %>% 
-  summarise(avg_time = mean(.time))
+## ---- best value, eval = TRUE-------------------------------------------------
+hmm_ino$best_value()
 
-## -----------------------------------------------------------------------------
-summary(hmm_ino) %>% 
-  mutate(global_optimum = ifelse(.optimum < 12878, 1, 0)) %>% 
-  group_by(.strategy) %>% 
-  summarise(proportion_global_optimum = mean(global_optimum))
+## ---- proportion of converged runs, eval = TRUE-------------------------------
+summary(hmm_ino, c("label", "value", "seconds"), global_optimum = "value < -22445", only_comparable = TRUE) %>% 
+  group_by(label) %>% 
+  summarise(proportion = mean(global_optimum, na.rm = TRUE))
 
-## -----------------------------------------------------------------------------
-summary(hmm_ino) %>% 
-  filter(.optimum < 12878) %>% 
-  group_by(.strategy) %>% 
-  summarise(mean_time = mean(.time))
+## ---- optimization-time, eval = TRUE------------------------------------------
+plot(hmm_ino, by = "label")
 
-## -----------------------------------------------------------------------------
-summary(hmm_ino) %>% 
-  filter(.optimum < 12878) %>% 
-  ggplot(aes(x = "", y = .time)) +
-    scale_y_continuous() +
-    geom_boxplot() +
-    facet_wrap(".strategy", labeller = "label_both", nrow = 1) +
-    theme(
-      axis.title.x = element_blank(),
-      axis.text.x = element_blank(),
-      axis.ticks.x = element_blank()
-    ) +
-    ylab("optimization time")
+## ---- summary statistics, warning = FALSE, message = FALSE, eval = TRUE-------
+summary(hmm_ino, c("label", "seconds")) %>% 
+  group_by(label) %>% 
+  summarise(
+    median_seconds = median(seconds, na.rm = TRUE),
+    sd_seconds = sd(seconds, na.rm = TRUE)
+  ) %>%
+  arrange(median_seconds)
 

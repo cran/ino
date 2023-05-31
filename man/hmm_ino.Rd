@@ -3,14 +3,15 @@
 \docType{data}
 \name{hmm_ino}
 \alias{hmm_ino}
-\title{Example application of {ino} to HMM likelihood}
+\title{Example application to HMM likelihood}
 \format{
-TBA
+A \code{\link{Nop}} object.
 }
 \usage{
-data(hmm_ino)
+data("hmm_ino")
 }
 \description{
-TBA
+See the vignette about the HMM likelihood for details:
+\code{vignette("example_hmm", package = "ino")}
 }
-\keyword{dataset}
+\keyword{demo}

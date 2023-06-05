@@ -5,10 +5,13 @@ knitr::opts_chunk$set(
   fig.align = "center",
   fig.path = "figures/probit-",
   fig.dim = c(8, 6), 
-  out.width = "75%"
+  out.width = "75%",
+  # all optimizations are pre-computed to save building time
+  eval = FALSE
 )
 library("ino")
 options("ino_verbose" = TRUE) 
+data("probit_ino")
 set.seed(1)
 ggplot2::theme_set(ggplot2::theme_minimal())
 
@@ -36,20 +39,20 @@ round(theta <- attr(probit_data, "true"), 2)
 ## ---- likelihood evaluation, eval = TRUE--------------------------------------
 f_ll_mnp(theta = theta, data = probit_data)
 
-## ---- define Nop, eval = FALSE------------------------------------------------
+## ---- define Nop--------------------------------------------------------------
 #  probit_ino <- Nop$new(f = f_ll_mnp, npar = 7, data = probit_data, neg = TRUE)$
 #    set_optimizer(optimizer_nlm(iterlim = 1000))
 
-## ---- set true parameter, eval = FALSE----------------------------------------
+## ---- set true parameter------------------------------------------------------
 #  probit_ino$true_parameter <- theta
 
 ## ---- print initial Nop object, eval = TRUE-----------------------------------
 print(probit_ino)
 
-## ---- optimize with random initial values, eval = FALSE-----------------------
+## ---- optimize with random initial values-------------------------------------
 #  probit_ino$optimize(initial = "random", runs = 100, label = "random")
 
-## ---- optimize on subset, eval = FALSE----------------------------------------
+## ---- optimize on subset------------------------------------------------------
 #  probit_ino$
 #    reduce("data", how = "random", proportion = 0.2)$
 #    optimize(initial = "random", runs = 100, label = "subset")$
@@ -63,13 +66,13 @@ probit_ino$deviation(
   ylim = c(-10, 10)
 )
 
-## ---- optimize with standardized data, eval = FALSE---------------------------
+## ---- optimize with standardized data-----------------------------------------
 #  probit_ino$
 #    standardize("data", by_column = TRUE, ignore = 1:3)$
 #    optimize(initial = "random", runs = 100, label = "standardized")$
 #    reset_argument("data")
 
-## ---- optimize with standardize and subset, eval = FALSE----------------------
+## ---- optimize with standardize and subset------------------------------------
 #  probit_ino$
 #    standardize("data", by_column = TRUE, ignore = 1:3)$
 #    reduce("data", how = "random", proportion = 0.2)$

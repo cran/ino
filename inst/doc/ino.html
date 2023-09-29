@@ -372,10 +372,10 @@ when explicit formulas for gradient or Hessian are not available. In
 these cases, numerical optimization algorithms are helpful. They
 iteratively explore the parameter space, guaranteeing to improve the
 function value over each iteration, and eventually converge to a point
-where no more improvements can be made <span class="citation">(<a href="#ref-Bonnans:2006" role="doc-biblioref">Bonnans et al.
-2006</a>)</span>. In R, several functions are available that can be
-applied to numerically solve optimization problems, including (quasi)
-Newton (<code>stats::nlm()</code>, <code>stats::nlminb()</code>,
+where no more improvements can be made <span class="citation">(<a href="#ref-Bonnans:2006">Bonnans et al. 2006</a>)</span>. In R, several
+functions are available that can be applied to numerically solve
+optimization problems, including (quasi) Newton
+(<code>stats::nlm()</code>, <code>stats::nlminb()</code>,
 <code>stats::optim()</code>), direct search
 (<code>pracma::nelder_mead()</code>), and conjugate gradient methods
 (<code>Rcgmin::Rcgmin()</code>). The <a href="https://CRAN.R-project.org/view=Optimization">CRAN Task View:
@@ -383,13 +383,13 @@ Optimization and Mathematical Programming</a> provides a comprehensive
 list of packages for solving optimization problems.</p>
 <p>One thing that all of these numerical optimizers have in common is
 that initial parameter values must be specified, i.e., the point from
-where the optimization is started. Optimization theory <span class="citation">(<a href="#ref-Nocedal:2006" role="doc-biblioref">Nocedal and Wright 2006</a>)</span> states that the
-choice of an initial point has a large influence on the optimization
-result, in particular convergence time and rate. In general, starting in
-areas of function saturation increases computation time, starting in
-areas of non-concavity leads to convergence problems or convergence to
-local rather than global optima. Consequently, numerical optimization
-can be facilitated by</p>
+where the optimization is started. Optimization theory <span class="citation">(<a href="#ref-Nocedal:2006">Nocedal and Wright
+2006</a>)</span> states that the choice of an initial point has a large
+influence on the optimization result, in particular convergence time and
+rate. In general, starting in areas of function saturation increases
+computation time, starting in areas of non-concavity leads to
+convergence problems or convergence to local rather than global optima.
+Consequently, numerical optimization can be facilitated by</p>
 <ol style="list-style-type: decimal">
 <li><p>analyzing the initialization effect for the optimization problem
 at hand and</p></li>
@@ -409,11 +409,10 @@ optimization,</p></li>
 <div id="package-functionality" class="section level2">
 <h2>Package functionality</h2>
 <p>To specify an optimization problem in <code>{ino}</code>, we use an
-object-oriented framework based on the <code>{R6}</code> package <span class="citation">(<a href="#ref-Chang:2021" role="doc-biblioref">Chang
-2021</a>)</span>. The general workflow is to first create a
-<code>Nop</code> object<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, and then apply methods to change the
-attributes of that object, e.g., to optimize the function and
-investigate the optimization results:</p>
+object-oriented framework based on the <code>{R6}</code> package <span class="citation">(<a href="#ref-Chang:2021">Chang 2021</a>)</span>. The
+general workflow is to first create a <code>Nop</code> object<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, and then
+apply methods to change the attributes of that object, e.g., to optimize
+the function and investigate the optimization results:</p>
 <ul>
 <li><p>The starting point for working with <code>{ino}</code> is to
 initialize a <code>Nop</code> object via
@@ -444,26 +443,25 @@ This is because the data set is relatively small and we consider a model
 with two classes only. Therefore, it might not seem relevant to be
 concerned about initialization here. However, the problem scales:
 optimization time will rise with more data and more parameters, in which
-case initialization becomes a greater issue, see for example <span class="citation">Shireman, Steinley, and Brusco (<a href="#ref-Shireman:2017" role="doc-biblioref">2017</a>)</span>.
-Additionally, we will see that even this simple optimization problem
-suffers heavily from local optima, depending on the choice of initial
-values.</p>
+case initialization becomes a greater issue, see for example <span class="citation">Shireman, Steinley, and Brusco (<a href="#ref-Shireman:2017">2017</a>)</span>. Additionally, we will see
+that even this simple optimization problem suffers heavily from local
+optima, depending on the choice of initial values.</p>
 </blockquote>
 <div id="the-optimization-problem" class="section level3">
 <h3>The optimization problem</h3>
 <p>The <code>faithful</code> data set contains information about
 eruption times (<code>eruptions</code>) of the Old Faithful geyser in
 Yellowstone National Park, Wyoming, USA.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(faithful)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    272 obs. of  2 variables:</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ eruptions: num  3.6 1.8 3.33 2.28 4.53 ...</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ waiting  : num  79 54 74 62 85 55 88 85 51 85 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">str</span>(faithful)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    272 obs. of  2 variables:</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt;  $ eruptions: num  3.6 1.8 3.33 2.28 4.53 ...</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt;  $ waiting  : num  79 54 74 62 85 55 88 85 51 85 ...</span></span></code></pre></div>
 <p>The data histogram hints at two clusters with short and long eruption
 times, respectively.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(faithful, <span class="fu">aes</span>(<span class="at">x =</span> eruptions)) <span class="sc">+</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;eruption time (min)&quot;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">ggplot</span>(faithful, <span class="fu">aes</span>(<span class="at">x =</span> eruptions)) <span class="sc">+</span> </span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span> </span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;eruption time (min)&quot;</span>) </span></code></pre></div>
 <p><img src="data:image/png;base64,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" width="75%" style="display: block; margin: auto;" /></p>
 <p>For both clusters, we assume a normal distribution, such that we
 consider a mixture of two Gaussian densities for modeling the overall
@@ -493,19 +491,19 @@ use the fact that <span class="math inline">\(\arg\max_{\boldsymbol{\theta}}
 \ell(\boldsymbol{\theta}) = \arg\min_{\boldsymbol{\theta}}
 -\ell(\boldsymbol{\theta})\)</span>.</p>
 </blockquote>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>normal_mixture_llk <span class="ot">&lt;-</span> <span class="cf">function</span>(theta, data, <span class="at">neg =</span> <span class="cn">TRUE</span>){</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">length</span>(theta) <span class="sc">==</span> <span class="dv">5</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="fu">plogis</span>(theta[<span class="dv">5</span>])</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  llk <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">log</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    lambda <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">1</span>], sd[<span class="dv">1</span>]) <span class="sc">+</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      (<span class="dv">1</span> <span class="sc">-</span> lambda) <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">2</span>], sd[<span class="dv">2</span>])</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(neg, <span class="sc">-</span>llk, llk)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">normal_mixture_llk</span>(<span class="at">theta =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">data =</span> faithful<span class="sc">$</span>eruptions)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1069.623</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>normal_mixture_llk <span class="ot">&lt;-</span> <span class="cf">function</span>(theta, data, <span class="at">neg =</span> <span class="cn">TRUE</span>){</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">length</span>(theta) <span class="sc">==</span> <span class="dv">5</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="fu">plogis</span>(theta[<span class="dv">5</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  llk <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">log</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    lambda <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">1</span>], sd[<span class="dv">1</span>]) <span class="sc">+</span> </span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>      (<span class="dv">1</span> <span class="sc">-</span> lambda) <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">2</span>], sd[<span class="dv">2</span>])</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    ))</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="fu">ifelse</span>(neg, <span class="sc">-</span>llk, llk)</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>}</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">normal_mixture_llk</span>(<span class="at">theta =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">data =</span> faithful<span class="sc">$</span>eruptions)</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; [1] 1069.623</span></span></code></pre></div>
 </div>
 <div id="another-optimization-approach-the-expectation-maximization-em-algorithm" class="section level3">
 <h3>Another optimization approach: the expectation-maximization (EM)
@@ -518,8 +516,8 @@ However, if we knew the class membership of each observation, the
 optimization problem would collapse to independent maximum likelihood
 estimation of two Gaussian distributions, which then can be solved
 analytically. This observation motivates the so-called
-expectation-maximization (EM) algorithm <span class="citation">(<a href="#ref-Dempster:1977" role="doc-biblioref">Dempster, Laird, and
-Rubin 1977</a>)</span>, which iterates through the following steps:</p>
+expectation-maximization (EM) algorithm <span class="citation">(<a href="#ref-Dempster:1977">Dempster, Laird, and Rubin 1977</a>)</span>,
+which iterates through the following steps:</p>
 <ol style="list-style-type: decimal">
 <li>Initialize <span class="math inline">\(\boldsymbol{\theta}\)</span>
 and compute <span class="math inline">\(\ell(\boldsymbol{\theta})\)</span>.</li>
@@ -535,28 +533,28 @@ reached. Otherwise, go back to step 2.</li>
 </ol>
 <p>The following function implements this algorithm, which we will
 compare to standard numerical optimization below.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>em <span class="ot">&lt;-</span> <span class="cf">function</span>(normal_mixture_llk, theta, <span class="at">epsilon =</span> <span class="fl">1e-08</span>, <span class="at">iterlim =</span> <span class="dv">1000</span>, data) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  llk <span class="ot">&lt;-</span> <span class="fu">normal_mixture_llk</span>(theta, data, <span class="at">neg =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="fu">plogis</span>(theta[<span class="dv">5</span>])</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iterlim) {</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    class_1 <span class="ot">&lt;-</span> lambda <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">1</span>], sd[<span class="dv">1</span>])</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    class_2 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> lambda) <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">2</span>], sd[<span class="dv">2</span>])</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    posterior <span class="ot">&lt;-</span> class_1 <span class="sc">/</span> (class_1 <span class="sc">+</span> class_2)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    lambda <span class="ot">&lt;-</span> <span class="fu">mean</span>(posterior)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    mu[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(posterior <span class="sc">*</span> data) <span class="sc">/</span> lambda</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    mu[<span class="dv">2</span>] <span class="ot">&lt;-</span> (<span class="fu">mean</span>(data) <span class="sc">-</span> lambda <span class="sc">*</span> mu[<span class="dv">1</span>]) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lambda)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    sd[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(posterior <span class="sc">*</span> (data <span class="sc">-</span> mu[<span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> lambda)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    sd[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((<span class="dv">1</span> <span class="sc">-</span> posterior) <span class="sc">*</span> (data <span class="sc">-</span> mu[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lambda))</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    llk_old <span class="ot">&lt;-</span> llk</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    theta <span class="ot">&lt;-</span> <span class="fu">c</span>(mu, <span class="fu">log</span>(sd), <span class="fu">qlogis</span>(lambda))</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    llk <span class="ot">&lt;-</span> <span class="fu">normal_mixture_llk</span>(theta, data, <span class="at">neg =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.na</span>(llk)) <span class="fu">stop</span>(<span class="st">&quot;fail&quot;</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (llk <span class="sc">-</span> llk_old <span class="sc">&lt;</span> epsilon) <span class="cf">break</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">&quot;neg_llk&quot;</span> <span class="ot">=</span> <span class="sc">-</span>llk, <span class="st">&quot;estimate&quot;</span> <span class="ot">=</span> theta, <span class="st">&quot;iterations&quot;</span> <span class="ot">=</span> i)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>em <span class="ot">&lt;-</span> <span class="cf">function</span>(normal_mixture_llk, theta, <span class="at">epsilon =</span> <span class="fl">1e-08</span>, <span class="at">iterlim =</span> <span class="dv">1000</span>, data) {</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  llk <span class="ot">&lt;-</span> <span class="fu">normal_mixture_llk</span>(theta, data, <span class="at">neg =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="fu">plogis</span>(theta[<span class="dv">5</span>])</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iterlim) {</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    class_1 <span class="ot">&lt;-</span> lambda <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">1</span>], sd[<span class="dv">1</span>])</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    class_2 <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> lambda) <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">2</span>], sd[<span class="dv">2</span>])</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    posterior <span class="ot">&lt;-</span> class_1 <span class="sc">/</span> (class_1 <span class="sc">+</span> class_2)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    lambda <span class="ot">&lt;-</span> <span class="fu">mean</span>(posterior)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    mu[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(posterior <span class="sc">*</span> data) <span class="sc">/</span> lambda</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    mu[<span class="dv">2</span>] <span class="ot">&lt;-</span> (<span class="fu">mean</span>(data) <span class="sc">-</span> lambda <span class="sc">*</span> mu[<span class="dv">1</span>]) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lambda)</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    sd[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(posterior <span class="sc">*</span> (data <span class="sc">-</span> mu[<span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> lambda)</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    sd[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((<span class="dv">1</span> <span class="sc">-</span> posterior) <span class="sc">*</span> (data <span class="sc">-</span> mu[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> lambda))</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    llk_old <span class="ot">&lt;-</span> llk</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    theta <span class="ot">&lt;-</span> <span class="fu">c</span>(mu, <span class="fu">log</span>(sd), <span class="fu">qlogis</span>(lambda))</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    llk <span class="ot">&lt;-</span> <span class="fu">normal_mixture_llk</span>(theta, data, <span class="at">neg =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.na</span>(llk)) <span class="fu">stop</span>(<span class="st">&quot;fail&quot;</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>    <span class="cf">if</span> (llk <span class="sc">-</span> llk_old <span class="sc">&lt;</span> epsilon) <span class="cf">break</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  }</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">&quot;neg_llk&quot;</span> <span class="ot">=</span> <span class="sc">-</span>llk, <span class="st">&quot;estimate&quot;</span> <span class="ot">=</span> theta, <span class="st">&quot;iterations&quot;</span> <span class="ot">=</span> i)</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="setup" class="section level3">
 <h3>Setup</h3>
@@ -570,68 +568,46 @@ which <code>f</code> is optimized (five in this case),</li>
 <li>and <code>data</code> gives the observation vector as required by
 our likelihood function.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mixture_ino <span class="ot">&lt;-</span> Nop<span class="sc">$</span><span class="fu">new</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">f =</span> normal_mixture_llk, </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">npar =</span> <span class="dv">5</span>, </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> faithful<span class="sc">$</span>eruptions</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>mixture_ino <span class="ot">&lt;-</span> Nop<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">f =</span> normal_mixture_llk, </span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">npar =</span> <span class="dv">5</span>, </span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">data =</span> faithful<span class="sc">$</span>eruptions</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>The next step concerns specifying the numerical optimizer via the
 <code>$set_optimizer()</code> method.</p>
 <blockquote>
 <p><strong>Remark:</strong> Numerical optimizers must be specified
 through the unified framework provided by the <a href="https://CRAN.R-project.org/package=optimizeR">{optimizeR}</a>
-package <span class="citation">(<a href="#ref-Oelschläger:2023" role="doc-biblioref">Oelschläger and Ötting 2023</a>)</span>. This is
-necessary because there is no a priori consistency across optimization
-functions in R with regard to their function inputs and outputs. This
-would make it impossible to allow for arbitrary optimizers and to
-compare their results, see <a href="https://github.com/loelschlaeger/optimizeR#readme">the {optimizeR}
+package <span class="citation">(<a href="#ref-Oelschläger:2023">Oelschläger and Ötting 2023</a>)</span>.
+This is necessary because there is no a priori consistency across
+optimization functions in R with regard to their function inputs and
+outputs. This would make it impossible to allow for arbitrary optimizers
+and to compare their results, see <a href="https://github.com/loelschlaeger/optimizeR#readme">the {optimizeR}
 README file</a> for details.</p>
 </blockquote>
 <p>It is possible to define any numerical optimizer implemented in R
 through the {optimizeR} framework. Here, we select two of the most
 popular ones, <code>stats::nlm()</code> and
 <code>stats::optim()</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_optimizer</span>(<span class="fu">optimizer_nlm</span>(), <span class="at">label =</span> <span class="st">&quot;nlm&quot;</span>)<span class="sc">$</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_optimizer</span>(<span class="fu">optimizer_optim</span>(), <span class="at">label =</span> <span class="st">&quot;optim&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">set_optimizer</span>(<span class="fu">optimizer_nlm</span>(), <span class="at">label =</span> <span class="st">&quot;nlm&quot;</span>)<span class="sc">$</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">set_optimizer</span>(<span class="fu">optimizer_optim</span>(), <span class="at">label =</span> <span class="st">&quot;optim&quot;</span>)</span></code></pre></div>
 <blockquote>
 <p><strong>Remark:</strong> The previous code chunk makes use of a
-technique called “method chaining” <span class="citation">(see <a href="#ref-Wickham:2019" role="doc-biblioref">Wickham 2019</a>,
-ch. 14.2.1)</span>. This means that
-<code>mixture_ino$set_optimizer()</code> returns the modified
+technique called “method chaining” <span class="citation">(see <a href="#ref-Wickham:2019">Wickham 2019</a>, ch. 14.2.1)</span>. This
+means that <code>mixture_ino$set_optimizer()</code> returns the modified
 <code>mixture_ino</code> object, for which we can specify a second
 optimizer by calling <code>$set_optimizer()</code> again.</p>
 </blockquote>
 <p>We also want to apply the EM algorithm introduced above:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>em_optimizer <span class="ot">&lt;-</span> optimizeR<span class="sc">::</span><span class="fu">define_optimizer</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">optimizer =</span> em, <span class="at">objective =</span> <span class="st">&quot;normal_mixture_llk&quot;</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">initial =</span> <span class="st">&quot;theta&quot;</span>, <span class="at">value =</span> <span class="st">&quot;neg_llk&quot;</span>, <span class="at">parameter =</span> <span class="st">&quot;estimate&quot;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">set_optimizer</span>(em_optimizer, <span class="at">label =</span> <span class="st">&quot;em&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>em_optimizer <span class="ot">&lt;-</span> optimizeR<span class="sc">::</span><span class="fu">define_optimizer</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">.optimizer =</span> em, <span class="at">.objective =</span> <span class="st">&quot;normal_mixture_llk&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">.initial =</span> <span class="st">&quot;theta&quot;</span>, <span class="at">.value =</span> <span class="st">&quot;neg_llk&quot;</span>, <span class="at">.parameter =</span> <span class="st">&quot;estimate&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">.direction =</span> <span class="st">&quot;min&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">set_optimizer</span>(em_optimizer, <span class="at">label =</span> <span class="st">&quot;em&quot;</span>)</span></code></pre></div>
 <p>Finally, we can validate our specification:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">test</span>(<span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Test configuration</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Function specified: normal_mixture_llk</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Target argument specified: theta (length 5)</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Test initial values specified: -0.63 0.18 -0.84 1.6 0.33</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Test function call</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Test function call returned a &lt;numeric&gt;.</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return value: 989.25</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Test optimization with `nlm`</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Test optimization returned a &lt;list&gt;.</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return value: 421.42</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return parameter: -0.63 3.49 -0.84 0.13 -23.22</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return seconds: 0.02</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Test optimization with `optim`</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Test optimization returned a &lt;list&gt;.</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return value: 421.42</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return parameter: 6.26 3.49 5.98 0.13 -16.93</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return seconds: 0.06</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Test optimization with `em`</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Test optimization returned a &lt;list&gt;.</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return value: 276.36</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return parameter: 2.02 4.27 -1.45 -0.83 -0.63</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Return seconds: 0.01</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">test</span>(<span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </div>
 <div id="function-evaluation" class="section level3">
 <h3>Function evaluation</h3>
@@ -639,36 +615,30 @@ optimizer by calling <code>$set_optimizer()</code> again.</p>
 <code>normal_mixture_llk</code> at some value for the parameter vector
 <code>theta</code> is simple with the <code>$evaluate()</code> method,
 for example:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">evaluate</span>(<span class="at">at =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1069.623</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">evaluate</span>(<span class="at">at =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; [1] 1069.623</span></span></code></pre></div>
 </div>
 <div id="function-optimization" class="section level3">
 <h3>Function optimization</h3>
 <p>Optimization of <code>normal_mixture_llk</code> is possible with the
 <code>$optimize()</code> method, for example:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">initial =</span> <span class="st">&quot;random&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>, <span class="at">save_result =</span> <span class="cn">FALSE</span>, <span class="at">return_result =</span> <span class="cn">TRUE</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $value</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 421.417</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $parameter</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  -0.6263149   3.4877818  -0.8353105   0.1303885 -23.2243957</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $seconds</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.01813602</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $initial</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $gradient</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.000000e+00 8.965459e-05 0.000000e+00 1.524540e-04 2.202816e-08</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $code</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $iterations</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 36</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="at">initial =</span> <span class="st">&quot;random&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>, <span class="at">save_result =</span> <span class="cn">FALSE</span>, <span class="at">return_result =</span> <span class="cn">TRUE</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; $value</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; $parameter</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; $seconds</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; $initial</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; $error</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; [1] &quot;attempt to select less than one element in get1index&quot;</span></span></code></pre></div>
 <p>The method arguments are:</p>
 <ul>
 <li><p><code>initial = &quot;random&quot;</code> for random starting values drawn
@@ -700,9 +670,9 @@ optimization, i.e., whether different initial values lead to different
 results. We therefore optimize the likelihood function
 <code>runs = 100</code> times at different random starting points
 (<code>initial = &quot;random&quot;</code>) and compare the identified optima:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">initial =</span> <span class="st">&quot;random&quot;</span>, <span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;random&quot;</span>, <span class="at">save_results =</span> <span class="cn">TRUE</span>, <span class="at">seed =</span> <span class="dv">1</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="at">initial =</span> <span class="st">&quot;random&quot;</span>, <span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;random&quot;</span>, <span class="at">save_results =</span> <span class="cn">TRUE</span>, <span class="at">seed =</span> <span class="dv">1</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>)</span></code></pre></div>
 <p>Note:</p>
 <ol style="list-style-type: decimal">
 <li>We label the optimization results with
@@ -718,32 +688,32 @@ the <code>$optima()</code>, <code>$summary()</code>, and
 identified optima. Here, we ignore any decimal places by setting
 <code>digits = 0</code> and sort by the optimum function
 <code>value</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    value frequency</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    276       106</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    277         1</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    283         1</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    290         1</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    294         1</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    296         1</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7    316         1</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8    323         1</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9    355         1</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10   364         1</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11   368         1</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12   372         1</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13   374         1</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14   389         1</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15   395         2</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 16   397         1</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17   400         1</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 18   402         2</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 19   406         1</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 20   415         1</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 21   419         2</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 22   420         1</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 23   421       163</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 24  &lt;NA&gt;         7</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#&gt;    value frequency</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt; 1    276       106</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; 2    277         1</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; 3    283         1</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; 4    290         1</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt; 5    294         1</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt; 6    296         1</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt; 7    316         1</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; 8    323         1</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt; 9    355         1</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; 10   364         1</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt; 11   368         1</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt; 12   372         1</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt; 13   374         1</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co">#&gt; 14   389         1</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#&gt; 15   395         2</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co">#&gt; 16   397         1</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt; 17   400         1</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt; 18   402         2</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt; 19   406         1</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co">#&gt; 20   415         1</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="co">#&gt; 21   419         2</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co">#&gt; 22   420         1</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co">#&gt; 23   421       163</span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co">#&gt; 24  &lt;NA&gt;         7</span></span></code></pre></div>
 <p>The 100 optimization runs with 3 optimizers using random starting
 values led to 23 different optima (minima in this case, because we
 minimized <code>normal_mixture_llk()</code>), while 7 optimization runs
@@ -752,41 +722,41 @@ huge impact on the optimization result.</p>
 <p>Looking at this overview optimizer-wise reveals that the
 <code>stats::optim</code> optimizer seems to be most vulnerable to local
 optima:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   276        20</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   402         1</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   421        79</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;optim&quot;</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    value frequency</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    276         4</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    277         1</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    283         1</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    290         1</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    294         1</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    296         1</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7    316         1</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8    323         1</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9    355         1</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10   364         1</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11   368         1</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12   372         1</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13   374         1</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14   389         1</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15   395         2</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 16   400         1</span></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17   402         1</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 18   406         1</span></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 19   415         1</span></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 20   419         2</span></span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 21   420         1</span></span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 22   421        74</span></span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;em&quot;</span>)</span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   276        82</span></span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   397         1</span></span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   421        10</span></span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  &lt;NA&gt;         7</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; 1   276        20</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; 2   402         1</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; 3   421        79</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;optim&quot;</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;    value frequency</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; 1    276         4</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; 2    277         1</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; 3    283         1</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; 4    290         1</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; 5    294         1</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; 6    296         1</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; 7    316         1</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; 8    323         1</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; 9    355         1</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; 10   364         1</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; 11   368         1</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; 12   372         1</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; 13   374         1</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; 14   389         1</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; 15   395         2</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; 16   400         1</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; 17   402         1</span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; 18   406         1</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; 19   415         1</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; 20   419         2</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt; 21   420         1</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; 22   421        74</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;em&quot;</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; 1   276        82</span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; 2   397         1</span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt; 3   421        10</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co">#&gt; 4  &lt;NA&gt;         7</span></span></code></pre></div>
 <p>The two most occurring optima are 421 and 276 with total frequencies
 of 163 and 106, respectively. The value 276 is the overall minimum
 (potentially the global minimum), while 421 is significantly worse.</p>
@@ -795,24 +765,24 @@ we can use the <code>$closest_parameter()</code> method. From the saved
 optimization runs, it extracts the parameter vector corresponding to an
 optimum closest to <code>value</code>. We consider only results from the
 <code>nlm</code> optimizer here:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(mle <span class="ot">&lt;-</span> mixture_ino<span class="sc">$</span><span class="fu">closest_parameter</span>(<span class="at">value =</span> <span class="dv">276</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  2.02  4.27 -1.45 -0.83 -0.63</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 99</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;nlm&quot;</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">evaluate</span>(<span class="at">at =</span> <span class="fu">as.vector</span>(mle))</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 276.3699</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>mle_run <span class="ot">&lt;-</span> <span class="fu">attr</span>(mle, <span class="st">&quot;run&quot;</span>)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>(bad <span class="ot">&lt;-</span> mixture_ino<span class="sc">$</span><span class="fu">closest_parameter</span>(<span class="at">value =</span> <span class="dv">421</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>))</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  3.49  2.11  0.13 -0.09 17.49</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 13</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;nlm&quot;</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">evaluate</span>(<span class="at">at =</span> <span class="fu">as.vector</span>(bad))</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 421.4176</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>bad_run <span class="ot">&lt;-</span> <span class="fu">attr</span>(bad, <span class="st">&quot;run&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>(mle <span class="ot">&lt;-</span> mixture_ino<span class="sc">$</span><span class="fu">closest_parameter</span>(<span class="at">value =</span> <span class="dv">276</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">#&gt; [1]  2.02  4.27 -1.45 -0.83 -0.63</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt; [1] 99</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;nlm&quot;</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">evaluate</span>(<span class="at">at =</span> <span class="fu">as.vector</span>(mle))</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt; [1] 276.3699</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>mle_run <span class="ot">&lt;-</span> <span class="fu">attr</span>(mle, <span class="st">&quot;run&quot;</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>(bad <span class="ot">&lt;-</span> mixture_ino<span class="sc">$</span><span class="fu">closest_parameter</span>(<span class="at">value =</span> <span class="dv">421</span>, <span class="at">which_run =</span> <span class="st">&quot;random&quot;</span>, <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>))</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt; [1]  3.49  2.11  0.13 -0.09 17.49</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt; [1] 13</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;nlm&quot;</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">evaluate</span>(<span class="at">at =</span> <span class="fu">as.vector</span>(bad))</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt; [1] 421.4176</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>bad_run <span class="ot">&lt;-</span> <span class="fu">attr</span>(bad, <span class="st">&quot;run&quot;</span>)</span></code></pre></div>
 <p>These two parameter vectors are saved as <code>mle</code> (this shall
 be our maximum likelihood estimate) and <code>bad</code> (this clearly
 is a bad estimate). Two attributes show the run id and the optimizer
@@ -820,45 +790,45 @@ that led to these parameters.</p>
 <p>To understand the values in terms of means, standard deviations, and
 mixing proportion (i.e., in the form <span class="math inline">\(\boldsymbol{\theta} = (\mu_1, \mu_2, \sigma_1,
 \sigma_2, \lambda)\)</span>), they need transformation (see above):</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>transform <span class="ot">&lt;-</span> <span class="cf">function</span>(theta) <span class="fu">c</span>(theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]), <span class="fu">plogis</span>(theta[<span class="dv">5</span>]))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>(mle <span class="ot">&lt;-</span> <span class="fu">transform</span>(mle))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.0200000 4.2700000 0.2345703 0.4360493 0.3475105</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>(bad <span class="ot">&lt;-</span> <span class="fu">transform</span>(bad))</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.4900000 2.1100000 1.1388284 0.9139312 1.0000000</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>transform <span class="ot">&lt;-</span> <span class="cf">function</span>(theta) <span class="fu">c</span>(theta[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="fu">exp</span>(theta[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]), <span class="fu">plogis</span>(theta[<span class="dv">5</span>]))</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>(mle <span class="ot">&lt;-</span> <span class="fu">transform</span>(mle))</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; [1] 2.0200000 4.2700000 0.2345703 0.4360493 0.3475105</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>(bad <span class="ot">&lt;-</span> <span class="fu">transform</span>(bad))</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt; [1] 3.4900000 2.1100000 1.1388284 0.9139312 1.0000000</span></span></code></pre></div>
 <p>The two estimates <code>mle</code> and <code>bad</code> for <span class="math inline">\(\boldsymbol{\theta}\)</span> correspond to the
 following mixture densities:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mixture_density <span class="ot">&lt;-</span> <span class="cf">function</span> (data, mu, sd, lambda) {</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  lambda <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">1</span>], sd[<span class="dv">1</span>]) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> lambda) <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">2</span>], sd[<span class="dv">2</span>])</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(faithful, <span class="fu">aes</span>(<span class="at">x =</span> eruptions)) <span class="sc">+</span> </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span> </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;eruption time (min)&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;parameter&quot;</span>) <span class="sc">+</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mixture_density</span>(x, <span class="at">mu =</span> mle[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">sd =</span> mle[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">lambda =</span> mle[<span class="dv">5</span>])</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    }, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;mle&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mixture_density</span>(x, <span class="at">mu =</span> bad[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">sd =</span> bad[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">lambda =</span> bad[<span class="dv">5</span>])</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    }, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;bad&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>mixture_density <span class="ot">&lt;-</span> <span class="cf">function</span> (data, mu, sd, lambda) {</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  lambda <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">1</span>], sd[<span class="dv">1</span>]) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> lambda) <span class="sc">*</span> <span class="fu">dnorm</span>(data, mu[<span class="dv">2</span>], sd[<span class="dv">2</span>])</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>}</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="fu">ggplot</span>(faithful, <span class="fu">aes</span>(<span class="at">x =</span> eruptions)) <span class="sc">+</span> </span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span> </span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;eruption time (min)&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;parameter&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  <span class="fu">stat_function</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>      <span class="fu">mixture_density</span>(x, <span class="at">mu =</span> mle[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">sd =</span> mle[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">lambda =</span> mle[<span class="dv">5</span>])</span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>    }, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;mle&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>  <span class="fu">stat_function</span>(</span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a>      <span class="fu">mixture_density</span>(x, <span class="at">mu =</span> bad[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">sd =</span> bad[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">lambda =</span> bad[<span class="dv">5</span>])</span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a>    }, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;bad&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="data:image/png;base64,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" width="75%" style="display: block; margin: auto;" /></p>
 <p>The mixture defined by the <code>mle</code> parameter fits much
 better than <code>bad</code>, which practically estimates only a single
 class. However, the gradients at both points are close to zero, which
 explains why the <code>nlm</code> optimizer terminates at both
 points:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">results</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">which_run =</span> <span class="fu">c</span>(mle_run, bad_run), <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>, <span class="at">which_element =</span> <span class="st">&quot;gradient&quot;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     gradient1     gradient2     gradient3     gradient4     gradient5 </span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3.487745e-05 -5.376563e-08  8.697043e-06  4.604317e-06  6.563244e-07 </span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     gradient1     gradient2     gradient3     gradient4     gradient5 </span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -8.618280e-06  1.882080e-06  1.025954e-06  2.162324e-06  5.474021e-07</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">results</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="at">which_run =</span> <span class="fu">c</span>(mle_run, bad_run), <span class="at">which_optimizer =</span> <span class="st">&quot;nlm&quot;</span>, <span class="at">which_element =</span> <span class="st">&quot;gradient&quot;</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>)</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#&gt;     gradient1     gradient2     gradient3     gradient4     gradient5 </span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt;  3.487745e-05 -5.376563e-08  8.697043e-06  4.604317e-06  6.563244e-07 </span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt;     gradient1     gradient2     gradient3     gradient4     gradient5 </span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt; -8.618280e-06  1.882080e-06  1.025954e-06  2.162324e-06  5.474021e-07</span></span></code></pre></div>
 </div>
 <div id="custom-sampler-for-initial-values" class="section level3">
 <h3>Custom sampler for initial values</h3>
@@ -870,78 +840,78 @@ can, however, easily modify the distribution that is used to draw the
 initial values. For example, the next code snippet uses starting values
 drawn from a <span class="math inline">\(\mathcal{N}(\mu = 2, \sigma =
 0.5)\)</span> distribution:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sampler <span class="ot">&lt;-</span> <span class="cf">function</span>() stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(<span class="at">initial =</span> sampler, <span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;custom_sampler&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>sampler <span class="ot">&lt;-</span> <span class="cf">function</span>() stats<span class="sc">::</span><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(<span class="at">initial =</span> sampler, <span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;custom_sampler&quot;</span>)</span></code></pre></div>
 <p>To obtain the first results of these optimization runs, we can use
 the <code>summary()</code> method. Note that setting
 <code>which_run = &quot;custom_sampler&quot;</code> allows filtering, which is the
 benefit of setting a <code>label</code> when calling
 <code>$optimize()</code>.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixture_ino, <span class="at">which_run =</span> <span class="st">&quot;custom_sampler&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     value                        parameter</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  421.42   3.49, 2.11, 0.13, -0.16, 16.74</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  421.42 3.49, -1.41, 0.13, -10.17, 16.53</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  276.36  2.02, 4.27, -1.45, -0.83, -0.63</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  421.42    3.49, 5.54, 0.13, 1.79, 14.70</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8  405.72    4.33, 2.16, 0.06, -0.36, 0.70</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">summary</span>(mixture_ino, <span class="at">which_run =</span> <span class="st">&quot;custom_sampler&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="co">#&gt;     value                        parameter</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a><span class="co">#&gt; 1  421.42   3.49, 2.11, 0.13, -0.16, 16.74</span></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a><span class="co">#&gt; 2  421.42 3.49, -1.41, 0.13, -10.17, 16.53</span></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; 3  276.36  2.02, 4.27, -1.45, -0.83, -0.63</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="co">#&gt; 4  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="co">#&gt; 5  421.42    3.49, 5.54, 0.13, 1.79, 14.70</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="co">#&gt; 6  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="co">#&gt; 7  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="co">#&gt; 8  405.72    4.33, 2.16, 0.06, -0.36, 0.70</span></span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a><span class="co">#&gt; 9  276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a><span class="co">#&gt; 10 276.36   4.27, 2.02, -0.83, -1.45, 0.63</span></span></code></pre></div>
 <p>Again we obtain different optima (even more than before). But in
 contrast, most of the runs here lead to the presumably global optimum of
 276:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_run =</span> <span class="st">&quot;custom_sampler&quot;</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    value frequency</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    276       184</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    277         1</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    278         1</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    283         1</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    288         1</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    289         1</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7    291         1</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8    292         1</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9    295         1</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10   297         1</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11   303         1</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12   314         1</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13   316         1</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14   317         1</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15   320         1</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 16   321         1</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 17   329         1</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 18   331         1</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 19   333         1</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 20   335         1</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 21   337         1</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 22   338         1</span></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 23   339         1</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 24   347         1</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 25   351         1</span></span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 26   352         1</span></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 27   359         1</span></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 28   368         1</span></span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 29   376         1</span></span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 30   377         1</span></span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 31   380         2</span></span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 32   390         3</span></span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 33   395         1</span></span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 34   397         1</span></span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 35   398         1</span></span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 36   401         1</span></span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 37   402         1</span></span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 38   403         1</span></span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 39   405         1</span></span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 40   406         2</span></span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 41   409         2</span></span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 42   411         2</span></span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 43   415         1</span></span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 44   416         2</span></span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 45   417         1</span></span>
-<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 46   419         1</span></span>
-<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 47   421        64</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>, <span class="at">which_run =</span> <span class="st">&quot;custom_sampler&quot;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="co">#&gt;    value frequency</span></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co">#&gt; 1    276       184</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="co">#&gt; 2    277         1</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a><span class="co">#&gt; 3    278         1</span></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co">#&gt; 4    283         1</span></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a><span class="co">#&gt; 5    288         1</span></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="co">#&gt; 6    289         1</span></span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a><span class="co">#&gt; 7    291         1</span></span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#&gt; 8    292         1</span></span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a><span class="co">#&gt; 9    295         1</span></span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a><span class="co">#&gt; 10   297         1</span></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="co">#&gt; 11   303         1</span></span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a><span class="co">#&gt; 12   314         1</span></span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a><span class="co">#&gt; 13   316         1</span></span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a><span class="co">#&gt; 14   317         1</span></span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a><span class="co">#&gt; 15   320         1</span></span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a><span class="co">#&gt; 16   321         1</span></span>
+<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a><span class="co">#&gt; 17   329         1</span></span>
+<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a><span class="co">#&gt; 18   331         1</span></span>
+<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a><span class="co">#&gt; 19   333         1</span></span>
+<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a><span class="co">#&gt; 20   335         1</span></span>
+<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a><span class="co">#&gt; 21   337         1</span></span>
+<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a><span class="co">#&gt; 22   338         1</span></span>
+<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a><span class="co">#&gt; 23   339         1</span></span>
+<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a><span class="co">#&gt; 24   347         1</span></span>
+<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co">#&gt; 25   351         1</span></span>
+<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a><span class="co">#&gt; 26   352         1</span></span>
+<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a><span class="co">#&gt; 27   359         1</span></span>
+<span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a><span class="co">#&gt; 28   368         1</span></span>
+<span id="cb20-31"><a href="#cb20-31" tabindex="-1"></a><span class="co">#&gt; 29   376         1</span></span>
+<span id="cb20-32"><a href="#cb20-32" tabindex="-1"></a><span class="co">#&gt; 30   377         1</span></span>
+<span id="cb20-33"><a href="#cb20-33" tabindex="-1"></a><span class="co">#&gt; 31   380         2</span></span>
+<span id="cb20-34"><a href="#cb20-34" tabindex="-1"></a><span class="co">#&gt; 32   390         3</span></span>
+<span id="cb20-35"><a href="#cb20-35" tabindex="-1"></a><span class="co">#&gt; 33   395         1</span></span>
+<span id="cb20-36"><a href="#cb20-36" tabindex="-1"></a><span class="co">#&gt; 34   397         1</span></span>
+<span id="cb20-37"><a href="#cb20-37" tabindex="-1"></a><span class="co">#&gt; 35   398         1</span></span>
+<span id="cb20-38"><a href="#cb20-38" tabindex="-1"></a><span class="co">#&gt; 36   401         1</span></span>
+<span id="cb20-39"><a href="#cb20-39" tabindex="-1"></a><span class="co">#&gt; 37   402         1</span></span>
+<span id="cb20-40"><a href="#cb20-40" tabindex="-1"></a><span class="co">#&gt; 38   403         1</span></span>
+<span id="cb20-41"><a href="#cb20-41" tabindex="-1"></a><span class="co">#&gt; 39   405         1</span></span>
+<span id="cb20-42"><a href="#cb20-42" tabindex="-1"></a><span class="co">#&gt; 40   406         2</span></span>
+<span id="cb20-43"><a href="#cb20-43" tabindex="-1"></a><span class="co">#&gt; 41   409         2</span></span>
+<span id="cb20-44"><a href="#cb20-44" tabindex="-1"></a><span class="co">#&gt; 42   411         2</span></span>
+<span id="cb20-45"><a href="#cb20-45" tabindex="-1"></a><span class="co">#&gt; 43   415         1</span></span>
+<span id="cb20-46"><a href="#cb20-46" tabindex="-1"></a><span class="co">#&gt; 44   416         2</span></span>
+<span id="cb20-47"><a href="#cb20-47" tabindex="-1"></a><span class="co">#&gt; 45   417         1</span></span>
+<span id="cb20-48"><a href="#cb20-48" tabindex="-1"></a><span class="co">#&gt; 46   419         1</span></span>
+<span id="cb20-49"><a href="#cb20-49" tabindex="-1"></a><span class="co">#&gt; 47   421        64</span></span></code></pre></div>
 </div>
 <div id="educated-guesses" class="section level3">
 <h3>Educated guesses</h3>
@@ -955,30 +925,30 @@ restrict the standard deviations to be positive by using
 <code>exp()</code> in the log-likelihood function). The starting value
 for the mixing proportion shall be around 0.5. This leads to the
 following 32 combinations of starting values:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mu_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">2.3</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mu_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4.3</span>, <span class="fl">3.7</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>sd_1 <span class="ot">&lt;-</span> sd_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">log</span>(<span class="fl">0.8</span>), <span class="fu">log</span>(<span class="fl">1.2</span>))</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">qlogis</span>(<span class="fl">0.4</span>), <span class="fu">qlogis</span>(<span class="fl">0.6</span>))</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>starting_values <span class="ot">&lt;-</span> <span class="fu">asplit</span>(<span class="fu">expand.grid</span>(mu_1, mu_2, sd_1, sd_2, lambda), <span class="at">MARGIN =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>mu_1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">2.3</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>mu_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4.3</span>, <span class="fl">3.7</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>sd_1 <span class="ot">&lt;-</span> sd_2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">log</span>(<span class="fl">0.8</span>), <span class="fu">log</span>(<span class="fl">1.2</span>))</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">qlogis</span>(<span class="fl">0.4</span>), <span class="fu">qlogis</span>(<span class="fl">0.6</span>))</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>starting_values <span class="ot">&lt;-</span> <span class="fu">asplit</span>(<span class="fu">expand.grid</span>(mu_1, mu_2, sd_1, sd_2, lambda), <span class="at">MARGIN =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p>In the <code>$optimize()</code> method, instead of
 <code>initial = &quot;random&quot;</code>, we can set <code>initial</code> to a
 numeric vector of length <code>npar</code>, or, for convenience, to a
 <code>list</code> of such vectors, like
 <code>starting_values</code>:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(<span class="at">initial =</span> starting_values, <span class="at">label =</span> <span class="st">&quot;educated_guess&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(<span class="at">initial =</span> starting_values, <span class="at">label =</span> <span class="st">&quot;educated_guess&quot;</span>)</span></code></pre></div>
 <p>These “educated guesses” lead to a way more stable optimization:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;educated_guess&quot;</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   276        95</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   277         1</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">which_run =</span> <span class="st">&quot;educated_guess&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="co">#&gt; 1   276        95</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="co">#&gt; 2   277         1</span></span></code></pre></div>
 <p>For comparison, we consider a set of implausible starting values…</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(<span class="at">initial =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="at">label =</span> <span class="st">&quot;bad_guess&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">optimize</span>(<span class="at">initial =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="at">label =</span> <span class="st">&quot;bad_guess&quot;</span>)</span></code></pre></div>
 <p>… which lead to local optima:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mixture_ino, <span class="at">which_run =</span> <span class="st">&quot;bad_guess&quot;</span>) </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    value                       parameter</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 421.42    3.49, 3.49, 0.13, 0.13, 0.00</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 384.78 1.84, 3.64, -2.92, -0.03, -3.00</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 421.42    3.49, 3.49, 0.13, 0.13, 0.00</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">summary</span>(mixture_ino, <span class="at">which_run =</span> <span class="st">&quot;bad_guess&quot;</span>) </span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="co">#&gt;    value                       parameter</span></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="co">#&gt; 1 421.42    3.49, 3.49, 0.13, 0.13, 0.00</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a><span class="co">#&gt; 2 384.78 1.84, 3.64, -2.92, -0.03, -3.00</span></span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a><span class="co">#&gt; 3 421.42    3.49, 3.49, 0.13, 0.13, 0.00</span></span></code></pre></div>
 </div>
 <div id="standardizing-the-optimization-problem" class="section level3">
 <h3>Standardizing the optimization problem</h3>
@@ -987,15 +957,15 @@ of the optimization problem, which could potentially improve the
 performance of the numerical optimizer. In our example, we can
 standardize the data before running the optimization via the
 <code>$standardize()</code> method:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">standardize</span>(<span class="st">&quot;data&quot;</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mixture_ino<span class="sc">$</span><span class="fu">get_argument</span>(<span class="st">&quot;data&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">standardize</span>(<span class="st">&quot;data&quot;</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">str</span>(mixture_ino<span class="sc">$</span><span class="fu">get_argument</span>(<span class="st">&quot;data&quot;</span>))</span></code></pre></div>
 <p>To optimize the likelihood using the standardized data set, we again
 use <code>$optmize()</code>, which by default uses random starting
 values. Below, we will compare these results with those obtained on the
 original optimization problem.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">optimize</span>(<span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;data_standardized&quot;</span>)<span class="sc">$</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reset_argument</span>(<span class="st">&quot;data&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">optimize</span>(<span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;data_standardized&quot;</span>)<span class="sc">$</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>  <span class="fu">reset_argument</span>(<span class="st">&quot;data&quot;</span>)</span></code></pre></div>
 <p>The usage of <code>$reset_argument(&quot;data&quot;)</code> is important: to
 perform further optimization runs after having applied standardized
 initialization, we undo the standardization of the data and obtain the
@@ -1014,14 +984,14 @@ it can be beneficial to initially consider a reduced data set. The
 following application of the <code>$reduce()</code> method transforms
 <code>&quot;data&quot;</code> by selecting a proportion of 30% data points at
 random:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">reduce</span>(<span class="at">argument_name =</span> <span class="st">&quot;data&quot;</span>, <span class="at">how =</span> <span class="st">&quot;random&quot;</span>, <span class="at">prop =</span> <span class="fl">0.3</span>, <span class="at">seed =</span> <span class="dv">1</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mixture_ino<span class="sc">$</span><span class="fu">get_argument</span>(<span class="st">&quot;data&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">reduce</span>(<span class="at">argument_name =</span> <span class="st">&quot;data&quot;</span>, <span class="at">how =</span> <span class="st">&quot;random&quot;</span>, <span class="at">prop =</span> <span class="fl">0.3</span>, <span class="at">seed =</span> <span class="dv">1</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">str</span>(mixture_ino<span class="sc">$</span><span class="fu">get_argument</span>(<span class="st">&quot;data&quot;</span>))</span></code></pre></div>
 <p>Similar to the standardizing above, calling <code>$optimize()</code>
 now optimizes on the reduced data set:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">optimize</span>(<span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;data_subset&quot;</span>)<span class="sc">$</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reset_argument</span>(<span class="st">&quot;data&quot;</span>)<span class="sc">$</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">continue</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  <span class="fu">optimize</span>(<span class="at">runs =</span> <span class="dv">100</span>, <span class="at">label =</span> <span class="st">&quot;data_subset&quot;</span>)<span class="sc">$</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">reset_argument</span>(<span class="st">&quot;data&quot;</span>)<span class="sc">$</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>  <span class="fu">continue</span>()</span></code></pre></div>
 <p>Again, we use <code>$reset_argument(&quot;data&quot;)</code> to obtain the
 original data set. The <code>$continue()</code> method now optimizes on
 the whole data set using the estimates obtained on the reduced data as
@@ -1046,58 +1016,58 @@ optimization times. Setting <code>by = &quot;label&quot;</code> allows for
 comparison across initialization strategies, setting
 <code>relative = TRUE</code> plots relative differences to the median of
 the top boxplot:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">plot</span>(<span class="at">by =</span> <span class="st">&quot;label&quot;</span>, <span class="at">relative =</span> <span class="cn">TRUE</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>))</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Dropped 15 results with missing data.</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">plot</span>(<span class="at">by =</span> <span class="st">&quot;label&quot;</span>, <span class="at">relative =</span> <span class="cn">TRUE</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="co">#&gt; ℹ Dropped 15 results with missing data.</span></span></code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAwAAAAJACAMAAAANcPFkAAABPlBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZrYzMzM6AAA6ADo6AGY6OgA6OmY6ZmY6ZpA6kLY6kNtNTU1NTW5NTY5Nbo5NbqtNjqtNjshmAABmADpmOgBmOmZmkLZmkNtmtttmtv9uTU1uTW5uTY5ubo5ubqtuq6tuq+SOTU2OTW6OTY6Obk2Obm6Ojm6Ojo6OyP+QOgCQZjqQZmaQkDqQkGaQkLaQtpCQttuQ27aQ29uQ2/+rbk2rbm6rjk2rq26rq46ryKur5OSr5P+2ZgC2Zjq2kDq2kGa2tpC2ttu225C22/+2/9u2///Ijk3Ijm7I5KvI/8jI///bkDrbkGbbtmbbtpDb25Db29vb/7bb/9vb///kq27k5Kvk/8jk///r6+v/tmb/yI7/25D/27b/29v/5Kv//7b//8j//9v//+T////CBz3XAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAft0lEQVR4nO2dC3/byHVHqX145U3TGJYdO2m7lh2vZDkN3TbdpJbTNFTbtI6VRmr62FWjlZTQtPD9v0BnBm+CEgEQnHs5OP/fSiTBOwdD6h5iQFncUUzIgDOSngAhkkEAMuggABl0EIAMOghABh0EIIMOApBBBwHIoCMkwId//c5o9PFfflPdevUX7+IPrz6d21rfckvxDfnn0ehOs8raTG/ZReU+O5+mQPv1/vGdThMivUZGgD/+cOTyydvK5tOPWgiwuHhxLsy+OrZbYwHsfJoCEUBNRAT48Gr052+NBn8zqjZX0x5qXXwxetIcXE3jgwwCbGREBDgd3SuuvH9872J79Mlrq8VodM/2xtX2vd9vb/1VbLb/+TeuYy6SI4Zp49+btZO5qyhOjif2WGJu/fo79s4s2R1HpjZpz3JJMezO6eijX1f2me9nToD6zNxjuRh9rzQfA0yhb91O/uxt+cFXBPjwqo3zpP9ICFD81N8/to3w3W3TPFuvywLYTVtfbbuVS0WA0/RKSYALW2bGJ1Ikmrjkd5QFyEtKwz7eHn3635V95vupCTA/M/tg3j/+6Dc1ASzUPJJ0J+VHXwhgBr/18pSTmyIhQOngf2S7x5yffvgX13Xpst60zRfx701DmYZLusXWXoxcu721bVgqNj39hW1Yd82c6Z5mq/3ijmIJVJRUht2zzOo+s/3MC1Cb2cXIvNY/KZ+TJAJY6IdXW2Yn/7VdXuyUBDB3l9UgAtEggOswc60kwJ3k6JB3S2x7L3kR/59f/+121RZHO7KHEFuR04s7ygJkJfPDqvss9jMvQH1mR8kJ9rwACdSt9SqnByUBjuh/8WgQwN06Nc1Q9PS9rOooa7P3j123JGuKqgCuuS9sJ2ft51LcURYgK5kfVt1nsZ/aOUBtZlfbbmbzAthr6cqtsgYqBLCLpjU9xaRpNJwDNBLgyPWw6Zrv/v2//e/jdQtQ7Ge5ABfJWUd7Aba+4BRYPBreBUqaprIEqrVZOiRp28o5QHktMyfAoiVQIUB1WHWfxX6WCvD+8Sc/tH3s1jlH2Qorg9bffi2fBF9Vzg6IQOR/D2BebL+XnQS792QWCXCRntmajvnGvrVolUiLy2ezFQEWnwSXzlIrw+YFyPazVAAzjwtrp52POU65d2jv5Dva+pl5nK9uOAfIjmtELjK/CX5f+k3w+8cfb6dvU54WvweottnX6buXoy/SK+6YUH8btCJAccciAeaHze8z288yAZKjhD182RW9W/N88sP8wJGugcpL/YoA6TsARCzy/xbINIL9tdLb2Hlx5+tbBXjifnv1M7vSyIpNVxa/CKsIkN+xUIC5YXMnwfl+lgng3smxFtj5fBP/p3koX78qVk52Jx9/UXnold8En3IeLBv5fw3KPwkggkEAMuggwPKkvxOY/zcNnhFkLUGA5UGAgCMvACGCQQAy6CAAGXQQgAw6CEAGHQQgg44+Ab5dK2jkKwKPLQyQ5ykNTAB/D3fhnvS1mz4QAqwT5PHhLtqVvnbTB0KANYJ8PloEkCYhQC0IoB+EAGsEIYB+EAKsEYQA+kEIsEZQ9mjdXyou+2vcq7uvzX+311x89O6mGgSQJiFALemjTT+7Ycmf4zYU4Ka7EECahAC1JI/2NOn8D69u/3NcBBABIcAaQe7RfniVLn4uPvqNc+DU/um7+1yKq8//zly4v165VxLg6q79NNx7dvuT5AN2k0PIaOunyRIoH/HVdr60QgBpEgLU4h5t/rJurpy6T/m85z4m4jT/UNLko25LAmy7j2Gx36wrSe37x/ZDvVxZPmI7KSn25fGxhQJCgDWCqgKYvnUv33dfXySv6E/cJ7n96Zs4W//kAjzJvhW1F+nHwZlN+Yi0pNiXx8cWCggB1giaE+AHr+15wKn9v1y43EvvunB/u1teAr0uvmW17kzi6vPkXaB8BALoISFALfPnAO/ii0+/ThxwW1zzus+hrh4BKgKktSUBSiMQQA8JAWpJ3wXK/m8x9lPefvDV5+/cJ0jbJK/m7nOdbzwCZLVuCZT8HqA0AgH0kBCglgW/Bzga3Uk/HTHrYNvh9jP/bxAgq7Uf55KeBJdGIIAeEgLUsuA3wcnHhtq3NpNlTOz+ly9bP3cnyIsEyGrLb4MWIxBAD2kIAnzWLl7/LVBt7xrbTR8IAdoUf9a0LikU/cdwCOCZhAClurRQ8i/CEMAzCQFKdZkAvh7vgh0hgGcSApTqskLBT4VAAM8kBCjVNS1clJ6eIwTwTEKAUh0CbAoIAdoUI0BwIARoU4wAwYEQoE0xAgQHQoA2xQgQHAgB2hQjQHAgBGhTjADBgRCgTTECBAdCgDbFCBAcCAHaFCNAcCAEaFOMAMGBEKBNMQIEB0KANsUIEBwIAdoUI0BwIARoU4wAwYEQoE0xAgQHQoA2xQgQHAgB2hQjQHAgBGhTjADBgRCgTTECBAdCgDbFCBAcSLkAx+O5DdeH81tWDAI0SMAgBGhTjADBgbQL8JMoMh0/3XUXs/3owctcAHvrx5Pps5PYfplbOydxfBmVL/qadhYECA6kXYCH56a7Zy8mrsmP90xn5wLYW/dzAcyts0fx7OCkdJFObGmaf95zw2mrEEA+y5/5waTrD9cugZJlkOlp29bFEsjdepMJYB2xJebC3pdcNAlHgAYJGKT8CPDbSSqBXdLYXi/OCqbPz8sC7EdRdH9iF0vme3bR17SzIEBwIOUCmHY3r/mz/bFr8tuOAAf5kv/y4XnpopdpZ0GA4EDaBXhku9s1+dPJwnMAu9o520nODx6e264vLnqbdhYECA6kXYCfuKXMWeTe/rk+nHsX6PtvJva+Lw/cu0C28jh5++eYd4EQwDNJ4jfB7qxgtSBAgwQM2jwB7O8E7Anvrw6jpie6twUBGiRg0OYJ0HMQoEECBiFAm2IECA6EAG2KESA4EAK0KUaA4EAI0KYYAYIDIUCbYgQIDoQAbYoRIDgQArQpRoDgQAjQphgBggMhQJtiBAgOhABtihEgOBACtClGgOBACNCmGAGCAyFAm2IECA6EAG2KESA4EAK0KUaA4EAI0KYYAYIDIUCbYgQIDoQAbYoRIDgQArQpRoDgQAjQphgBggMhQJtiBAgOhABtihEgOBACtCn28qHio34wbR9bb0/SZoEQQB2ov+dI32PTB0IAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUKAbsP6+bvdhenpb4I1R+zHtk7SwAToMqbZIH3PUd9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BAEVBAP9BgIW5Phwv2jx9drK8qHsQwH8QYGEQIAkCNEg4Asz2o50Td/Hg5dg2u/0yt+5P4uluFI3d/ZWi0sgHP56UhtiSy6h80de060GAFYIApRzvxWeP3MVllAlgX+YvH/7hxcTesNsqRaWRl/dzAZKS2cFJ6SKd2Irp7QOOESCN34+iLmXVVuie7KHXfrgz0+WmXW3HmrZPu7lY9Zjt5ka1qLgrvn6TCZCVmIuU2jAcAfyHI0ARs3KJouR1PD7OBXh+7u48tgsZ292VonSkLSoJkJTYZZP5nl30Ne16EGCFIEAR+zqeXswfAWb74/RGtag0siTAQb7kv3x4XrroZdr1IMAKQYBS7EretGqyvLdLl7Mddw4wffYftrWfTtIFflFUHnl/kg5JS2xVcdHbtOtBgBWCAKUkb/iYV3b3Bs9ZFH15kL0LZG6YbdeH7l2gUlEx8vtvJtUhyaopv+hr2vUgwApBgL5S/R1BpyCA/yDAKrG/HbAnvL86jJqe6N4WBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFAUBPAfBFCUrgKsL6M1snVE7se2TtKwBFgjqL/nSN9j0wdCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCAHUgBPAJQgB1IATwCUIAdSAE8AlCgK4D1/YXswv+Jtj3YxsQCAG6DlzhT7tv7+j6c4QA6wMhQNeBCBAECAG6DkSAIEAI0HUgAgQBQoCuAxEgCBACdB2IAEGAEKDrQAQIAoQAXQciQBAgBOg6EAGCACFA14EIEAQIAboORIAgQAjQdSACBAFCgK4DESAIEAJ0HYgAQYAQoOtABAgChABdByJAECAE6DoQAYIAIUDXgQgQBAgBug5EgCBACNB1IAIEAUKArgMRIAgQAnQdiABBgBCg60AECAKEAF0HIkAQIAToOhABggAhQNeBCBAESLMA14fj9Nr02cmtlcfj+rZlY9IgwLBBCNBmRuUgQJHiE0xLn2W66HNNbwY1/QzUtOrb+qY6J7lW5c4X3zCl+cnUIJ/V91o8BdUR5crmAsz2owcvx/F0N4rG5vrOibuW330ZmU2uye3X8U/cfcnG2JW7bw32gwCrg4off6kRFn6y742gpp8CnFV9W99U4yTXqtx68cIpzU9mAWTBXounoDyiUtlcgOM908/j2YuJ7XDzX3otvXd2cBKfPSoEeHhuS5KNdmh6n8u3DfJZhzR+KLW0FkBxys9e+dq3lYqmP4BmdbdsKnOSa9UR9eJGu1kAWbDX4ikoj3DXbv7h3hDbzOkSyFxNm9luTO82OsRxIcDYLoPSjfaiGLMsHAFWB2U/fY4A/R0BXPu6vrbLmuRWVFrUmAXR/UkuwG8nrjjZaBY/kblEAM4BNvgcID0CzPbH2RIouVYquXTrnuwIkB4uzMb0OIEACt9z0QdS+y5Qcg7gOvzpJHHAXkvvNX3uet2sds7MYeHYLfnTjW5oIkdf014UBAgCpFaA60P3LtBZZC+uD3dOkmvZ3el6yGz88sC9C3R/km80ayBzy47pa9qLggBBgNQK4CsIMGzQhglgfxngTnFX5BRBgGGDNkyA/oMAwwYhQNeBCBAECAG6DkSAIEAI0HUgAgQBQoCuAxEgCBACdB2IAEGAEKDrQAQIAoQAXQciQBAgBOg6EAGCACFA14EIEAQIAboORIAgQAjQdSACBAFCgK4DESAIEAJ0HYgAQYAQoOtABAgChABdByJAECAE6DoQAYIAIUDXgQgQBAgBug5EgCBACNB1IAIEAUKArgMRIAgQAnQdiABBgBCg68DP1pVRbYv3xzYgEAKoA/X3HOl7bPpACKAOhAA+QQigDoQAPkEIoA6EAD5BCKAOhAA+QQigDoQAPkEIoA6EAD5BCKAOhAA+QQigDoQAPkEIoA6EAD5BCKAOhAA+QQigDoQAPkEIoA6EAD5BCKAOhAA+QQigDoQAPkEIoA6EAD5BCKAOhAA+QQigDoQAPkEIoA6EAD5BCKAOhAA+QQjQD2atfxQfdER/bH2SBi7AquMLgL7naJ1BAOEggGwQQDgIIBsEEA4CyAYBhIMAskEA4SCAbBBAOAggGwQQDgLIBgGEgwCyQQDhIIBsEEA4CCAbBBAOAsgGAYSDALJBAOEggGwQQDgIIBsEEA4CyAYBhIMAskEA4SCAbBBAOAggGwQQDgLIBgGEgwCyQQDhIIBsEEA4CCAbBBAOAsgGAYSDALJBAOEggGwGLMD14Ti9Nn12srB64fZiWGnLgsp63cIggGwQIO5DgAWDEWAjMlQBZvvRg5fjeLobRWNzfefEXcvrLiOzqbR9+vwX7u7ysHj6o5euyGwxqhxHUfQodmPyur6mvTwI0DFDFeB4zzT5ePZiYl/mzX/ptfTe2cFJfPYoLrZPd039w/O5YbvjDOSGXr+Z2JtmYLo1ndhKWe+HHOcZrgBqslqfLEn2cLMfru3wdI1irqadbzemd5sOj/MlUFphdagNS7e4yrM9N9BsKtUtC0cA2Qz0COAa9ti+gNu1TnIrcouX9P7d6H56SMgrkkPF3LB0i7v6/NwufSIzMq/radrLgwAdM1AB0pfo2f44WwIl10qlZsVTbK8eAUobiyOAXQBlBxGOABuTgQpQWrpPn06yDn86Se+1y/1EgKLC+TE/rAQyC6CUm58r9Dbt5UGAjhmqANeH7m2as8heXB/unCTXsruT9VCxPROgMiw58z1Mrv7OLn6iPbMGMmunrK6vaS8PAnTMUAVQEwSQDQKUY9/fd2exfUyoWRBANgggHASQDQIIBwFkgwDCQQDZIIBwEEA2CCAcBJANAggHAWSDAMJBANkggHAQQDYIIBwEkA0CCAcBZIMAwkEA2SCAcBBANgggHASQDQIIBwFkgwDCQQDZIIBwEEA2CCAcBJANAggHAWSDAMJBANkggHAQQDYIIBwEkA0CCAcBZIMAwulLgP4y6pGlP7I/tj5JwxagR1B/z5G+x6YPhADqQAjgE4QA6kAI4BOEAOpACOAThADqQAjgE4QA6kAI4BOEAOpACOAThADqQAjgE4QA6kAI4BOEAOpACOAThADqQAjgE4QA6kAI4BOEAOpACOAThADqQAjgE4QA6kAI4BOEAOpACOAThADqQAjgE4QA6kAI4BOEAOpACOAThAA9cfr7K9l1/02w4JOkEIQAPXFW/ViIIjc9R53/gHwO02GMvr5FgL6CAA2ir28RoK8gQIPo61sE6CsI0CD6+hYB+goCNIi+vkWAvoIADaKvbxGgryBAg+jrWwToKwjQIPr6FgH6CgI0iL6+RYC+ggANoq9vEaCvIECD6OtbBOgrCNAg+voWAfoKAjSIvr5FgL6CAA2ir28RoK8gQIPo61sE6CsI0CD6+hYB+goCNIi+vkWAvoIADaKvbxGgryBAg+jrWwToKwjQIPr6FgH6CgI0iL6+RYC+ggANoq9vEaCvIECD6OtbBOgrCNAg+voWAfoKAjSIvr5FgL6CAA2ir28RYC7Xh+NuAxGgQfT1LQLMBQGaBgEak9p9kKovAaY/erlzMt2NonE8ff4LexHP9qMHL8f2Yuckvn7zyyjauzRfjXAI0CD6+taHAC0/StibALum1V9M4ukzo8FefPnwPD42F0aEY3fr+vCRqXlk708ntjRSH7q8OOsWIKgs/+F2T587WPbDbZGssWcHJ/aq+TLX7BLIXhgzrt9MYvtlJWkQjgANou+Fe8hHACfAcWSWO6kAbsvx2F6YzkeA24MAjUmt+t+rALP9cdb5HAFaBgHWRPIpgPt6OsmuVs8BEODWIMCaSF6XQGeRfd8nE+D6sPIuEALcFgRYE4nfBPcUBPAJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6ImDAJsJQoCeOAiwmSAE6InT3wcej/pDLYrkk6QQhADqQP09R/oemz4QAqgDIYBPEAKoAyGATxACqAMhgE8QAqgDIYBPEAKoAyGATxACqAMhgE8QAqgDIYBPEAKoAyGATxACqAMhgE8QAqgDIYBPEAKoAyGATxACqAMhgE8QAqgDIYBPEAKoAyGATxACqAMhgE8QAqgDIYBPEAKoAyGATxACqAMhgE8QAqgDIYBPEALIgvz/UXyHSD9J6wQhgCxowYc0LH+OevqAlKZBgP5ACDAXBBAGIYAsCAGEQQggC0IAYRACyIIQQBiEALIgBBAGIYAsCAGEQQggC0IAYRACyIIQQBiEALIgBBAGIYAsCAGEQQggC0IAYRACyIIQQBiEALIgBBAGIYAsCAGEQQggC0IAYRACyIIQQBiEALIgBBAGIYAsCAGEQQggC0IAYRACyIIQQBiEALIgBBAGIYAsCAGEQQggC0IAYRACyIIQQBiEALIgBBAGKRRg+uyk8yTaj0WA5buTfpLWCUKAzvvqBYQAwqAlpM+aP9fdBJjtR/cntm3t12UU7ZyYLem3+PrNL6Noz2zdy+tdiWn03Sgal++fHfyjATlKMnb6o5c7TWRAgOW7k36S1gm6nZR8NnAPoCzzP9zrw3F8+fD/EgFmByfx2SPXxMd7ZvP59aG5tfuo9LqelsxeuF4v3T/bf3h+uXOSjrWU3XE2MW/p9MnLS5+jenwLMJTc8BPtozWy53L+h5u0dnoEsG2d3LJ9bm5dv5nE9iu9w6S4Zl0o3T/btweESUox9zVdDHEEWL476SdpnSDhI8D0+XmcC2AXNskyxt4w7VwXIC2J42O7FCoLYEuOx+5YEEXpsqq3aa8PhADCIOFzgMoRwG4wC5/bjgBpiX29t0ugqgDpEeDgpCD3NO31gRBAGCT8LpA9B5g++53p3rOdE9PZqQDZOUBNgFLJ9OmksgR6VB2LAL0FAfoDLX4XKD6Loi/NC7db1xgpineBakeApMQOePByXDkC/HXpXaD0Wm/TXh8IAYRB0gL0leoqqUUQYPnupJ+kdYI2RAD7vr87t72pAAHWFwToD8S/BZoLAgiDEEAWhADCIASQBSGAMAgBZEEIIAxCAFkQAgiDEEAWhADCIASQBSGAMAgBZEEIIAxCAFkQAgiDEEAWhADCIASQBSGAMAgBZEEIIAxCAFkQAgiDEEAWhADCIASQBSGAMAgBZEEIIAxCAFkQAgiDEEAWhADCIASQBSGAMAgBZEEIIAxCAFkQAgiDEEAWhADCIASQBS34jOKRv49DbhbxJ2mdIARQB+rvOdL32PSBEEAdCAF8ghBAHQgBfIIQQB0IAXyCEEAdCAF8ghBAHQgBfIIQQB0IAXyCEEAdCAF8ghBAHQgBfIIQQB0IAXyCEEAdCAF8ghBAHQgBfIIQQB0IAXyCEEAdCAF8ghBAHQgBfIIQQB0IAXyCEEAdCAF8ggYvACEegwBk0EEAMuggABl0EIAMOghABh0EIIMOApBBBwHIoKNEgOmzkzie7UcPz/OLY/v9+nAsNyk1E8mi7Vma7kbRWNWM4sso2mn1JOkQ4NLO2s7w7FF2MX1+frwXXz6Sm5SaiWTR9izNXkzi6dOJohm5l4hiLk2mpEKA4/v/ZCY+OzixDyC9MPM927t+M5GblZqJuJnoepbcjFxLHY91zCh9kuK4NJcmU1IhQGKuEdW+qBQXx3tnkq+7aiaS/2z1PEt5t1WmIvp05VNKXvObTkmRAJcP3XTTC7tw+8PB7/ajPak5aZmIWdaa2L1reZaKGV0f7qmYUTGl6e79SZspSQtwHEVWzfprm73zbO9sL70qEDUTueUIIDW5dEaz/b1YyYxuOSjdOiVpAdJMa6vb2D2k47Hc6lvNRCoC6HiWkhlNd8dxrGRGhQC105Jbp6RIAHs4dafu7iK21saSL7xqJpJH2bOU9L+mGWVrnxZTUiTA3Ju3yaFV8BxAz0SyKHuWzty6e6xoRm5O5hygxZSUCECITBCADDoIQAYdBCCDDgKQQQcByKCDAKvkw6uRy71i09Xd1/n1P76t3JzLxUfv5rY0G3sL8qaRi4bcMrnb5x1WEGCVfHjlWv9q+0m+qdQ5S5qoLkAp3Ruw4chbygbT/DYIsEpSAeKjO/kmBNisIMAqKQtgl0OmpW33XG3bZZH9fu/q7j+4mtOP3qUFLu8fj7Z+am4k2z6kJf8+P/a1K7hje/IrsyU5zpjN5ZtFyU9Ho0+/yUYmJQ70xA3Zdou1J8t3sJAQl2cfUhBglaQCXJgO+fDKtNGpacC7r98/fuI63rlw97XZaAuzAjvg/eN75st2frItLamPtQX262rbVJwmDei6ubhZlCS8dGRSMkrq0td0e3ezHdQI5dkHFQRYJdlJ8JN0QWO6y3TOn2ybuJfQ16WLrMCOc9dNW5UGpZVzY12B+ebOMtI2dr1Z3Jwvydv3SXpykm4zOTIN3GwHNUJ59kEFAVaJOwJcbbsFTPp+kGuiC3Nt63X+InvPvcqX3jByL6VXn7/LtqUl9bEXrjDt4JIApZuVkopMaUkuQPoC32QHNcJp7e2uQIIAqyRZAtkVUL48cMuYrfJLv2nRr5MGz8flAmTbkpL62D4FuNiy9c12UBcgwNWPCwKskvQc4Mi8tCbtFedNdZG/yMbvf/DV50WBTbbwyLclJfWxruAiXcTfIEBW4hYrn7+7SYB0X812UCOUZx9UEGCV5L8HsGeSprOSxrLNcrW95U5oXQMdjdy7REmBHfD+8Z30JDjbdpS8FTM/Nj9HvVmA+ZPgdOS8ANnvKhrsYBGhPPugggCrJHsb9NQsju0JcbK6MN082vq56SLT1emy/kkcZwUu5bdB3TZXsmBs/i7ljQJU3ga1v49IRs4LcOTW8FtNdrCIUJl9SEGAUJJ1L2kVBAglCNApCBBKEKBTEIAMOghABh0EIIMOApBBBwHIoIMAZNBBADLo/D9oIZ+Y1ZcbygAAAABJRU5ErkJggg==" width="75%" style="display: block; margin: auto;" /></p>
 <p>Setting <code>by = &quot;optimizer&quot;</code> allows comparison across
 optimizers:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">plot</span>(<span class="at">by =</span> <span class="st">&quot;optimizer&quot;</span>, <span class="at">relative =</span> <span class="cn">FALSE</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>))</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Dropped 15 results with missing data.</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">plot</span>(<span class="at">by =</span> <span class="st">&quot;optimizer&quot;</span>, <span class="at">relative =</span> <span class="cn">FALSE</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="co">#&gt; ℹ Dropped 15 results with missing data.</span></span></code></pre></div>
 <p><img src="data:image/png;base64,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" width="75%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="the-global-optimum" class="section level3">
 <h3>The global optimum</h3>
 <p>The best optimization result can be extracted via:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">best_value</span>()</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 248.98</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 421</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;em&quot;</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">best_parameter</span>()</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]   3.53   1.75   0.11 -32.71   3.79</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 421</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;em&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">best_value</span>()</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a><span class="co">#&gt; [1] 248.98</span></span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a><span class="co">#&gt; [1] 421</span></span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;em&quot;</span></span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">best_parameter</span>()</span>
+<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a><span class="co">#&gt; [1]   3.53   1.75   0.11 -32.71   3.79</span></span>
+<span id="cb32-9"><a href="#cb32-9" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;run&quot;)</span></span>
+<span id="cb32-10"><a href="#cb32-10" tabindex="-1"></a><span class="co">#&gt; [1] 421</span></span>
+<span id="cb32-11"><a href="#cb32-11" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;optimizer&quot;)</span></span>
+<span id="cb32-12"><a href="#cb32-12" tabindex="-1"></a><span class="co">#&gt; [1] &quot;em&quot;</span></span></code></pre></div>
 <p>The best function value of 248.98 is unique:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>))</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   249         1</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   276       516</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   277         4</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   278         1</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   283         2</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6   288         1</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">head</span>(mixture_ino<span class="sc">$</span><span class="fu">optima</span>(<span class="at">digits =</span> <span class="dv">0</span>, <span class="at">sort_by =</span> <span class="st">&quot;value&quot;</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co">#&gt;   value frequency</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="co">#&gt; 1   249         1</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co">#&gt; 2   276       516</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="co">#&gt; 3   277         4</span></span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="co">#&gt; 4   278         1</span></span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a><span class="co">#&gt; 5   283         2</span></span>
+<span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a><span class="co">#&gt; 6   288         1</span></span></code></pre></div>
 <p>Furthermore, it does not produce a two-class mixture, since one class
 variance is practically zero, see the output of
 <code>mixture_ino$best_parameter()</code>. We could therefore delete
 this result from our <code>Nop</code> object:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">clear</span>(<span class="at">which_run =</span> <span class="fu">attr</span>(mixture_ino<span class="sc">$</span><span class="fu">best_value</span>(), <span class="st">&quot;run&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>mixture_ino<span class="sc">$</span><span class="fu">clear</span>(<span class="at">which_run =</span> <span class="fu">attr</span>(mixture_ino<span class="sc">$</span><span class="fu">best_value</span>(), <span class="st">&quot;run&quot;</span>))</span></code></pre></div>
 <p>The final <code>Nop</code> object then looks as follows:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mixture_ino)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Optimization problem:</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Function: normal_mixture_llk</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Optimize over: theta (length 5) </span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Additional arguments: data </span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Numerical optimizer:</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - 1: nlm </span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - 2: optim </span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - 3: em </span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Optimization results:</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Total runs (comparable): 433 (332)</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Best parameter: 2.02 4.27 -1.45 -0.83 -0.63</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Best value: 276.36</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">print</span>(mixture_ino)</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="co">#&gt; Optimization problem:</span></span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a><span class="co">#&gt; - Function: normal_mixture_llk</span></span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a><span class="co">#&gt; - Optimize over: theta (length 5) </span></span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a><span class="co">#&gt; - Additional arguments: data </span></span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a><span class="co">#&gt; Numerical optimizer:</span></span>
+<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a><span class="co">#&gt; - 1: nlm </span></span>
+<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a><span class="co">#&gt; - 2: optim </span></span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a><span class="co">#&gt; - 3: em </span></span>
+<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a><span class="co">#&gt; Optimization results:</span></span>
+<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a><span class="co">#&gt; - Total runs (comparable): 433 (332)</span></span>
+<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a><span class="co">#&gt; - Best parameter: 2.02 4.27 -1.45 -0.83 -0.63</span></span>
+<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a><span class="co">#&gt; - Best value: 276.36</span></span></code></pre></div>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

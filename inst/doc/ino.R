@@ -76,13 +76,14 @@ em <- function(normal_mixture_llk, theta, epsilon = 1e-08, iterlim = 1000, data)
 
 ## ---- set em algorithm--------------------------------------------------------
 #  em_optimizer <- optimizeR::define_optimizer(
-#    optimizer = em, objective = "normal_mixture_llk",
-#    initial = "theta", value = "neg_llk", parameter = "estimate"
+#    .optimizer = em, .objective = "normal_mixture_llk",
+#    .initial = "theta", .value = "neg_llk", .parameter = "estimate",
+#    .direction = "min"
 #  )
 #  mixture_ino$set_optimizer(em_optimizer, label = "em")
 
-## ---- validate mixture_ino, eval = TRUE---------------------------------------
-mixture_ino$test(verbose = TRUE)
+## ---- validate mixture_ino, eval = FALSE--------------------------------------
+#  mixture_ino$test(verbose = FALSE)
 
 ## ---- example evaluation, eval = TRUE-----------------------------------------
 mixture_ino$evaluate(at = 1:5)

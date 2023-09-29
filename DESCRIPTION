@@ -1,6 +1,6 @@
 Package: ino
 Title: Initialization of Numerical Optimization
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
     person("Lennart", "Oelschl\u00e4ger", 
            email = "oelschlaeger.lennart@gmail.com", 
@@ -24,20 +24,19 @@ LazyDataCompression: xz
 RoxygenNote: 7.2.3
 Imports: cli, crayon, doSNOW, dplyr, forcats, foreach, ggplot2, glue,
         mvtnorm, reshape2, rlang, scales
-Suggests: covr, devtools, DT, fHMM, knitr, markdown, purrr, pracma,
-        rmarkdown, testthat (>= 3.0.0)
+Suggests: fHMM, knitr, purrr, pracma, rmarkdown, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 URL: https://loelschlaeger.de/ino/,
         https://github.com/loelschlaeger/ino
 BugReports: https://github.com/loelschlaeger/ino/issues
 VignetteBuilder: knitr
-Depends: R (>= 4.0.0), optimizeR (>= 0.3.1)
+Depends: R (>= 4.0.0), optimizeR (>= 0.3.3)
 NeedsCompilation: no
-Packaged: 2023-06-05 08:51:37 UTC; loelschlaeger
+Packaged: 2023-09-28 16:19:56 UTC; loelschlaeger
 Author: Lennart Oelschläger [aut, cre]
     (<https://orcid.org/0000-0001-5421-9313>),
   Marius Ötting [aut] (<https://orcid.org/0000-0002-9373-0365>),
   Dietmar Bauer [ctb]
 Maintainer: Lennart Oelschläger <oelschlaeger.lennart@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-06-05 18:30:06 UTC
+Date/Publication: 2023-09-29 11:20:03 UTC

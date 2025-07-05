@@ -1,212 +1,155 @@
-## ---- setup, include = FALSE--------------------------------------------------
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.align = "center",
-  fig.path = "figures/ino-",
-  fig.dim = c(8, 6), 
-  out.width = "75%",
-  # all optimizations are pre-computed to save building time
-  eval = FALSE
-)
+## ----load ino, include = FALSE------------------------------------------------
 library("ino")
-options("ino_verbose" = TRUE)
-data("mixture_ino")
-set.seed(1)
-ggplot2::theme_set(ggplot2::theme_minimal())
 
-## ---- faithful data, eval = TRUE----------------------------------------------
-str(faithful)
-
-## ---- faithful, warning = FALSE, eval = TRUE----------------------------------
+## ----faithful-plot------------------------------------------------------------
 library("ggplot2")
 ggplot(faithful, aes(x = eruptions)) + 
   geom_histogram(aes(y = after_stat(density)), bins = 30) + 
   xlab("eruption time (min)") 
 
-## ---- mixture ll, eval = TRUE-------------------------------------------------
-normal_mixture_llk <- function(theta, data, neg = TRUE){
-  stopifnot(length(theta) == 5)
-  mu <- theta[1:2]
-  sd <- exp(theta[3:4])
-  lambda <- plogis(theta[5])
-  llk <- sum(log(
-    lambda * dnorm(data, mu[1], sd[1]) + 
-      (1 - lambda) * dnorm(data, mu[2], sd[2])
-    ))
-  ifelse(neg, -llk, llk)
+## ----define mixture ll--------------------------------------------------------
+normal_mixture_llk <- function(mu, sigma, lambda, data) {
+  sigma <- exp(sigma)
+  lambda <- plogis(lambda)
+  sum(log(lambda * dnorm(data, mu[1], sigma[1]) + (1 - lambda) * dnorm(data, mu[2], sigma[2])))
 }
-normal_mixture_llk(theta = 1:5, data = faithful$eruptions)
+normal_mixture_llk(mu = 1:2, sigma = 3:4, lambda = 5, data = faithful$eruptions)
 
-## ---- em algorithm, eval = TRUE-----------------------------------------------
-em <- function(normal_mixture_llk, theta, epsilon = 1e-08, iterlim = 1000, data) {
-  llk <- normal_mixture_llk(theta, data, neg = FALSE)
-  mu <- theta[1:2]
-  sd <- exp(theta[3:4])
-  lambda <- plogis(theta[5])
-  for (i in 1:iterlim) {
-    class_1 <- lambda * dnorm(data, mu[1], sd[1])
-    class_2 <- (1 - lambda) * dnorm(data, mu[2], sd[2])
-    posterior <- class_1 / (class_1 + class_2)
-    lambda <- mean(posterior)
-    mu[1] <- mean(posterior * data) / lambda
-    mu[2] <- (mean(data) - lambda * mu[1]) / (1 - lambda)
-    sd[1] <- sqrt(mean(posterior * (data - mu[1])^2) / lambda)
-    sd[2] <- sqrt(mean((1 - posterior) * (data - mu[2])^2) / (1 - lambda))
-    llk_old <- llk
-    theta <- c(mu, log(sd), qlogis(lambda))
-    llk <- normal_mixture_llk(theta, data, neg = FALSE)
-    if (is.na(llk)) stop("fail")
-    if (llk - llk_old < epsilon) break
-  }
-  list("neg_llk" = -llk, "estimate" = theta, "iterations" = i)
-}
-
-## ---- initialize mixture_ino--------------------------------------------------
-#  mixture_ino <- Nop$new(
-#    f = normal_mixture_llk,
-#    npar = 5,
-#    data = faithful$eruptions
-#  )
-
-## ---- mixture_ino optimizer---------------------------------------------------
-#  mixture_ino$
-#    set_optimizer(optimizer_nlm(), label = "nlm")$
-#    set_optimizer(optimizer_optim(), label = "optim")
-
-## ---- set em algorithm--------------------------------------------------------
-#  em_optimizer <- optimizeR::define_optimizer(
-#    .optimizer = em, .objective = "normal_mixture_llk",
-#    .initial = "theta", .value = "neg_llk", .parameter = "estimate",
-#    .direction = "min"
-#  )
-#  mixture_ino$set_optimizer(em_optimizer, label = "em")
-
-## ---- validate mixture_ino, eval = FALSE--------------------------------------
-#  mixture_ino$test(verbose = FALSE)
-
-## ---- example evaluation, eval = TRUE-----------------------------------------
-mixture_ino$evaluate(at = 1:5)
-
-## ---- example optimization, eval = TRUE---------------------------------------
-mixture_ino$optimize(
-  initial = "random", which_optimizer = "nlm", save_result = FALSE, return_result = TRUE
+## ----initialize Nop-----------------------------------------------------------
+Nop_mixture <- Nop$new(
+  f = normal_mixture_llk,               # the objective function
+  target = c("mu", "sigma", "lambda"),  # names of target arguments
+  npar = c(2, 2, 1),                    # lengths of target arguments
+  data = faithful$eruptions             # values for fixed arguments
 )
 
-## ---- random initialization---------------------------------------------------
-#  mixture_ino$optimize(
-#    initial = "random", runs = 100, label = "random", save_results = TRUE, seed = 1
-#  )
+## ----example evaluation-------------------------------------------------------
+Nop_mixture$evaluate(at = 1:5) # same values as above
 
-## ---- show optima, eval = TRUE------------------------------------------------
-mixture_ino$optima(digits = 0, which_run = "random", sort_by = "value")
+## ----define optimizer---------------------------------------------------------
+nlm <- optimizeR::Optimizer$new(which = "stats::nlm")
+Nop_mixture$set_optimizer(nlm)
 
-## ---- show optima optimizer-wise, eval = TRUE---------------------------------
-mixture_ino$optima(digits = 0, which_run = "random", sort_by = "value", which_optimizer = "nlm")
-mixture_ino$optima(digits = 0, which_run = "random", sort_by = "value", which_optimizer = "optim")
-mixture_ino$optima(digits = 0, which_run = "random", sort_by = "value", which_optimizer = "em")
+## ----example optimization-----------------------------------------------------
+set.seed(1)
+Nop_mixture$
+  initialize_random(runs = 20)$
+  optimize(which_direction = "max", optimization_label = "random")
 
-## ---- closest parameters, eval = TRUE-----------------------------------------
-(mle <- mixture_ino$closest_parameter(value = 276, which_run = "random", which_optimizer = "nlm"))
-mixture_ino$evaluate(at = as.vector(mle))
-mle_run <- attr(mle, "run")
-(bad <- mixture_ino$closest_parameter(value = 421, which_run = "random", which_optimizer = "nlm"))
-mixture_ino$evaluate(at = as.vector(bad))
-bad_run <- attr(bad, "run")
+## ----access results-----------------------------------------------------------
+Nop_mixture$results
 
-## ---- transform parameter, eval = TRUE----------------------------------------
+## ----overview optima----------------------------------------------------------
+Nop_mixture$optima(which_direction = "max", digits = 0)
+
+## ----global and local optimum-------------------------------------------------
+global <- Nop_mixture$maximum$parameter
+library("dplyr")
+local <- Nop_mixture$results |>
+  slice_min(abs(value - (-421)), n = 1) |>
+  pull(parameter) |>                       
+  unlist() 
+
+## ----transform parameter------------------------------------------------------
 transform <- function(theta) c(theta[1:2], exp(theta[3:4]), plogis(theta[5]))
-(mle <- transform(mle))
-(bad <- transform(bad))
+(global <- transform(global))
+(local <- transform(local))
 
-## ---- estimated-mixtures, eval = TRUE-----------------------------------------
-mixture_density <- function (data, mu, sd, lambda) {
-  lambda * dnorm(data, mu[1], sd[1]) + (1 - lambda) * dnorm(data, mu[2], sd[2])
+## ----estimated-mixtures-------------------------------------------------------
+mixture_density <- function (data, mu, sigma, lambda) {
+  lambda * dnorm(data, mu[1], sigma[1]) + (1 - lambda) * dnorm(data, mu[2], sigma[2])
 }
 ggplot(faithful, aes(x = eruptions)) + 
   geom_histogram(aes(y = after_stat(density)), bins = 30) + 
   labs(x = "eruption time (min)", colour = "parameter") +
   stat_function(
     fun = function(x) {
-      mixture_density(x, mu = mle[1:2], sd = mle[3:4], lambda = mle[5])
-    }, aes(color = "mle"), linewidth = 1
+      mixture_density(x, mu = global[1:2], sigma = global[3:4], lambda = global[5])
+    }, aes(color = "global"), linewidth = 1
   ) +
   stat_function(
     fun = function(x) {
-      mixture_density(x, mu = bad[1:2], sd = bad[3:4], lambda = bad[5])
-    }, aes(color = "bad"), linewidth = 1
+      mixture_density(x, mu = local[1:2], sigma = local[3:4], lambda = local[5])
+    }, aes(color = "local"), linewidth = 1
   )
 
-## ---- extract gradients, eval = TRUE------------------------------------------
-mixture_ino$results(
-  which_run = c(mle_run, bad_run), which_optimizer = "nlm", which_element = "gradient"
+## ----grid initial-------------------------------------------------------------
+Nop_mixture$initialize_grid(
+  lower = c(1.5, 3.5, log(0.5), log(0.5), qlogis(0.4)), # lower bounds for the grid
+  upper = c(2.5, 4.5, log(1.5), log(1.5), qlogis(0.6)), # upper bounds for the grid
+  breaks = c(3, 3, 3, 3, 3),                            # breaks for the grid in each dimension
+  jitter = TRUE                                         # random shuffle of the grid points
 )
 
-## ---- custom sampler----------------------------------------------------------
-#  sampler <- function() stats::rnorm(5, mean = 2, sd = 0.5)
-#  mixture_ino$optimize(initial = sampler, runs = 100, label = "custom_sampler")
+## ----steepest gradient--------------------------------------------------------
+Nop_mixture$
+  initialize_promising(proportion = 0.1, condition = "gradient_large")$
+  optimize(which_direction = "max", optimization_label = "promising_grid")
 
-## ---- summary of custom sampler results, eval = TRUE--------------------------
-summary(mixture_ino, which_run = "custom_sampler", digits = 2) |>
-  head(n = 10)
+## ----overview comparison------------------------------------------------------
+Nop_mixture$optima(which_direction = "max", group_by = "optimization", digits = 0)
 
-## ---- overview optima for custom sampler, eval = TRUE-------------------------
-mixture_ino$optima(digits = 0, sort_by = "value", which_run = "custom_sampler")
+## ----define em, include = FALSE-----------------------------------------------
+em <- function(f, theta, ..., epsilon = 1e-08, iterlim = 1000, data) {
+  llk <- f(theta, ...)
+  mu <- theta[1:2]
+  sigma <- exp(theta[3:4])
+  lambda <- plogis(theta[5])
+  for (i in 1:iterlim) {
+    class_1 <- lambda * dnorm(data, mu[1], sigma[1])
+    class_2 <- (1 - lambda) * dnorm(data, mu[2], sigma[2])
+    posterior <- class_1 / (class_1 + class_2)
+    lambda <- mean(posterior)
+    mu[1] <- mean(posterior * data) / lambda
+    mu[2] <- (mean(data) - lambda * mu[1]) / (1 - lambda)
+    sigma[1] <- sqrt(mean(posterior * (data - mu[1])^2) / lambda)
+    sigma[2] <- sqrt(mean((1 - posterior) * (data - mu[2])^2) / (1 - lambda))
+    llk_old <- llk
+    theta <- c(mu, log(sigma), qlogis(lambda))
+    llk <- f(theta, ...)
+    if (is.na(llk)) stop("em failed")
+    if (abs(llk - llk_old) < epsilon) break
+  }
+  list("llk" = llk, "estimate" = theta, "iterations" = i)
+}
 
-## ---- fixed starting values, eval = TRUE--------------------------------------
-mu_1 <- c(1.7, 2.3)
-mu_2 <- c(4.3, 3.7)
-sd_1 <- sd_2 <- c(log(0.8), log(1.2))
-lambda <- c(qlogis(0.4), qlogis(0.6))
-starting_values <- asplit(expand.grid(mu_1, mu_2, sd_1, sd_2, lambda), MARGIN = 1)
+em_optimizer <- optimizeR::Optimizer$new("custom")
 
-## ---- optimization with educated guesses--------------------------------------
-#  mixture_ino$optimize(initial = starting_values, label = "educated_guess")
+em_optimizer$definition(
+  algorithm = em,
+  arg_objective = "f",
+  arg_initial = "theta",
+  out_value = "llk",
+  out_parameter = "estimate",
+  direction = "max"
+)
 
-## ---- overview optima for educated guesses, eval = TRUE-----------------------
-mixture_ino$optima(digits = 0, which_run = "educated_guess")
+em_optimizer$set_arguments("data" = faithful$eruptions)
 
-## ---- bad guess---------------------------------------------------------------
-#  mixture_ino$optimize(initial = rep(0, 5), label = "bad_guess")
+## ----set optim and em algorithm-----------------------------------------------
+optim <- optimizeR::Optimizer$new(which = "stats::optim")
+Nop_mixture$
+  set_optimizer(optim)$
+  set_optimizer(em_optimizer)
 
-## ---- bad guess summary, which_run = "random", eval = TRUE--------------------
-summary(mixture_ino, which_run = "bad_guess") 
+## ----optimizer comparison-----------------------------------------------------
+Nop_mixture$
+  initialize_random(runs = 100)$
+  optimize(which_direction = "max", optimization_label = "optimizer_comparison")
 
-## ---- standardize data--------------------------------------------------------
-#  mixture_ino$standardize("data")
-#  str(mixture_ino$get_argument("data"))
+## ----plot-seconds-------------------------------------------------------------
+Nop_mixture$results |> 
+  filter(.optimization_label == "optimizer_comparison") |>
+  autoplot(which_element = "seconds", group_by = "optimizer", relative = TRUE) +
+    scale_x_continuous(labels = scales::percent_format()) +
+    labs(
+      "x" = "optimization time relative to overall median",
+      "y" = "optimizer"
+    )
 
-## ---- optimization with standardized data-------------------------------------
-#  mixture_ino$
-#    optimize(runs = 100, label = "data_standardized")$
-#    reset_argument("data")
+## ----overview optima em-------------------------------------------------------
+Nop_mixture$optima(which_direction = "max", group_by = "optimizer", digits = 0) 
 
-## ---- reduce data-------------------------------------------------------------
-#  mixture_ino$reduce(argument_name = "data", how = "random", prop = 0.3, seed = 1)
-#  str(mixture_ino$get_argument("data"))
-
-## ---- optimization with reduced data------------------------------------------
-#  mixture_ino$
-#    optimize(runs = 100, label = "data_subset")$
-#    reset_argument("data")$
-#    continue()
-
-## ---- plot-by-label, eval = TRUE----------------------------------------------
-mixture_ino$plot(by = "label", relative = TRUE, xlim = c(-1, 3))
-
-## ---- plot-by-optimizer, eval = TRUE------------------------------------------
-mixture_ino$plot(by = "optimizer", relative = FALSE, xlim = c(0, 0.05))
-
-## ---- extract best value and parameter, eval = TRUE---------------------------
-mixture_ino$best_value()
-mixture_ino$best_parameter()
-
-## ---- best optimum, eval = TRUE-----------------------------------------------
-head(mixture_ino$optima(digits = 0, sort_by = "value"))
-
-## ---- delete optimum, eval = TRUE---------------------------------------------
-mixture_ino$clear(which_run = attr(mixture_ino$best_value(), "run"))
-
-## ---- print final mixture_ino object, eval = TRUE-----------------------------
-print(mixture_ino)
+## ----extract best-------------------------------------------------------------
+Nop_mixture$maximum
 

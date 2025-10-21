@@ -1,4 +1,4 @@
-## ----download dax data, eval = TRUE-------------------------------------------
+## ----download dax data, eval = eval_Nop_hmm-----------------------------------
 library("fHMM")
 library("dplyr")
 dax <- download_data(symbol = "^GDAXI", from = "1990-01-01", to = "2020-01-01") %>%
@@ -10,7 +10,7 @@ dax <- download_data(symbol = "^GDAXI", from = "1990-01-01", to = "2020-01-01") 
   filter(!is.na(logreturn)) %>%
   print()
 
-## ----plot-dax-data, eval = TRUE-----------------------------------------------
+## ----plot-dax-data, eval = eval_Nop_hmm---------------------------------------
 library("ggplot2")
 ggplot(dax, aes(x = date, y = logreturn)) +
   geom_point() +
@@ -19,6 +19,7 @@ ggplot(dax, aes(x = date, y = logreturn)) +
   scale_y_continuous(labels = scales::label_percent())
 
 ## ----define ino object--------------------------------------------------------
+# library("ino")
 # Nop_hmm <- Nop$new(
 #   f = fHMM::ll_hmm,
 #   npar = 6,
@@ -30,12 +31,6 @@ ggplot(dax, aes(x = date, y = logreturn)) +
 
 ## ----set optimizer------------------------------------------------------------
 # Nop_hmm$set_optimizer(optimizeR::Optimizer$new("stats::nlm"))
-
-## ----parallel setting---------------------------------------------------------
-# future::plan(future::multisession, workers = 10)
-
-## ----progress setting---------------------------------------------------------
-# progressr::handlers(global = TRUE)
 
 ## ----random initialization----------------------------------------------------
 # Nop_hmm$
@@ -89,32 +84,32 @@ ggplot(dax, aes(x = date, y = logreturn)) +
 #   c(x[1:2], x[3:4] * scale + center, log(exp(x[3:4]) * scale + center))
 # }
 
-## ----overview of optima, eval = TRUE------------------------------------------
+## ----overview of optima, eval = eval_Nop_hmm----------------------------------
 Nop_hmm$optima(sort_by_value = TRUE, digits = 0)
 
-## ----get number of converged runs, include = FALSE, eval = TRUE---------------
+## ----get number of converged runs, include = FALSE, eval = eval_Nop_hmm-------
 optima <- Nop_hmm$optima(sort_by_value = TRUE, digits = 0)
 global <- optima |> arrange(value) |> slice(1) |> pull(n)
 total <- sum(optima$n)
 local <- total - global
 
-## ----summary of results, eval = TRUE------------------------------------------
+## ----summary of results, eval = eval_Nop_hmm----------------------------------
 Nop_hmm$results |> select(value, parameter, seconds)
 
-## ----best parameter, eval = TRUE----------------------------------------------
+## ----best parameter, eval = eval_Nop_hmm--------------------------------------
 Nop_hmm$minimum
 
-## ----proportion of converged runs, eval = TRUE--------------------------------
+## ----proportion of converged runs, eval = eval_Nop_hmm------------------------
 Nop_hmm$results |> 
   filter(.original) |>
   mutate(global_optimum = value < -22445) |>
   group_by(.optimization_label) |>
   summarise(proportion = mean(global_optimum, na.rm = TRUE))
 
-## ----optimization-time, eval = TRUE-------------------------------------------
+## ----optimization-time, eval = eval_Nop_hmm-----------------------------------
 Nop_hmm$results |> autoplot(group_by = "optimization")
 
-## ----summary statistics, eval = TRUE------------------------------------------
+## ----summary statistics, eval = eval_Nop_hmm----------------------------------
 Nop_hmm$results |>
   group_by(.optimization_label) %>%
   summarise(

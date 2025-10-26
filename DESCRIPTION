@@ -1,6 +1,6 @@
 Package: ino
 Title: Initialization of Numerical Optimization
-Version: 1.1.1
+Version: 1.2.0
 Authors@R: c(
     person("Lennart", "Oelschl\u00e4ger", 
            email = "oelschlaeger.lennart@gmail.com", 
@@ -24,20 +24,19 @@ Depends: R (>= 4.1.0)
 Imports: checkmate, cli, dplyr, future.apply, ggplot2, normalize (>=
         0.1.2), oeli (>= 0.7.4), optimizeR (>= 1.2.1), portion (>=
         0.1.2), R6, tidyr, utils
-Suggests: knitr, fHMM (>= 1.4.2), progressr, renv, rmarkdown, scales,
-        TestFunctions, testthat
+Suggests: knitr, progressr, renv, rmarkdown, scales, TestFunctions,
+        testthat
 Config/testthat/edition: 3
 URL: https://loelschlaeger.de/ino/,
         https://github.com/loelschlaeger/ino
 BugReports: https://github.com/loelschlaeger/ino/issues
 VignetteBuilder: knitr
-LazyData: true
 NeedsCompilation: no
-Packaged: 2025-10-21 09:22:36 UTC; Lennart Oelschläger
+Packaged: 2025-10-25 19:09:00 UTC; lennart
 Author: Lennart Oelschläger [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-5421-9313>),
   Marius Ötting [aut] (ORCID: <https://orcid.org/0000-0002-9373-0365>),
   Dietmar Bauer [ctb]
 Maintainer: Lennart Oelschläger <oelschlaeger.lennart@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-10-21 11:30:07 UTC
+Date/Publication: 2025-10-26 22:50:09 UTC
